@@ -1,1 +1,423 @@
 
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografik: Die KI-Giganten im Vergleich</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8; 
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .text-hero {
+            color: #004AAD;
+        }
+        .bg-accent-dark {
+            background-color: #004AAD;
+        }
+        .bg-accent-medium {
+            background-color: #008DDA;
+        }
+        .bg-accent-light {
+            background-color: #41C9E2;
+        }
+        .bg-accent-extralight {
+            background-color: #ACE2E1;
+        }
+        .text-accent-dark {
+            color: #004AAD;
+        }
+        .text-accent-medium {
+            color: #008DDA;
+        }
+        .border-accent-dark {
+            border-color: #004AAD;
+        }
+        .kpi-value {
+            font-weight: 900;
+            font-size: 2.5rem;
+            line-height: 1.1;
+            color: #004AAD;
+        }
+        .kpi-label {
+            font-weight: 600;
+            color: #4A5568;
+        }
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 900;
+            color: #1A202C;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: #4A5568;
+            text-align: center;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 3rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-accent-dark text-white text-center py-12 px-4">
+        <h1 class="text-4xl md:text-6xl font-black tracking-tight">Die KI-Giganten im Vergleich</h1>
+        <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-blue-100">Eine umfassende Analyse der führenden KI-Anbieter: Leistung, Kosten und Alleinstellungsmerkmale im Überblick.</p>
+    </header>
+
+    <main class="py-12 px-4 md:px-8">
+        
+        <section class="max-w-7xl mx-auto mb-20">
+            <h2 class="section-title">Die Anbieter im Überblick</h2>
+            <p class="section-subtitle">Jeder Anbieter besetzt eine einzigartige Nische im KI-Ökosystem, von Sicherheit und Datenschutz bis hin zu roher Leistung und Echtzeit-Datenanbindung.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div class="card">
+                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Google Gemini</h3>
+                    <p class="text-gray-600"><strong>USP:</strong> Tiefe Integration in das Google-Ökosystem und starke multimodale Fähigkeiten.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Anthropic Claude</h3>
+                    <p class="text-gray-600"><strong>USP:</strong> Fokus auf Sicherheit und Ethik durch "Constitutional AI".</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-bold text-accent-dark mb-2">OpenAI ChatGPT</h3>
+                    <p class="text-gray-600"><strong>USP:</strong> Marktführer mit hoher Anpassbarkeit durch benutzerdefinierte GPTs.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-bold text-accent-dark mb-2">X Grok</h3>
+                    <p class="text-gray-600"><strong>USP:</strong> Echtzeit-Datenzugriff durch direkte Integration mit der X-Plattform.</p>
+                </div>
+                 <div class="card">
+                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Mistral AI</h3>
+                    <p class="text-gray-600"><strong>USP:</strong> Europäischer Anbieter mit Fokus auf Datenschutz, Open-Source und Effizienz.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Meta Llama</h3>
+                    <p class="text-gray-600"><strong>USP:</strong> Open-Source-Modelle mit riesigen Kontextfenstern zur Demokratisierung der KI.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Perplexity AI</h3>
+                    <p class="text-gray-600"><strong>USP:</strong> KI-Suchmaschine, die Antworten mit überprüfbaren Quellenangaben liefert.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto mb-20">
+            <h2 class="section-title">Leistung im Fokus: Maximale Kontextlänge</h2>
+            <p class="section-subtitle">Die Kontextlänge ist ein entscheidender Leistungsindikator. Sie bestimmt, wie viele Informationen ein Modell in einer einzigen Anfrage verarbeiten kann. Längere Kontexte ermöglichen die Analyse umfangreicher Dokumente und komplexerer Dialoge.</p>
+            <div class="chart-container h-[400px] md:h-[600px] max-w-6xl">
+                <canvas id="contextLengthChart"></canvas>
+            </div>
+        </section>
+        
+        <section class="max-w-7xl mx-auto mb-20">
+            <h2 class="section-title">Kostenanalyse: API-Preise</h2>
+            <p class="section-subtitle">Die API-Kosten werden pro 1 Million verarbeiteter Tokens berechnet. Ein "Token" entspricht dabei ungefähr 4 Zeichen. Die Preise für Eingabe- (Input) und Ausgabe-Tokens (Output) unterscheiden sich oft erheblich.</p>
+            <div class="chart-container h-[400px] md:h-[600px] max-w-6xl">
+                <canvas id="apiPriceChart"></canvas>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto mb-20">
+            <h2 class="section-title">Datenschutz & Sicherheit im Vergleich</h2>
+            <p class="section-subtitle">Datenschutz ist ein kritisches Unterscheidungsmerkmal. Die Handhabung von Nutzerdaten für das Modelltraining und die Einhaltung von Vorschriften wie der DSGVO variieren stark zwischen den Anbietern.</p>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead class="bg-accent-dark text-white">
+                        <tr>
+                            <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Anbieter</th>
+                            <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Daten für Training genutzt (Standard)?</th>
+                            <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Zero-Data-Retention Option?</th>
+                            <th class="text-center py-3 px-4 uppercase font-semibold text-sm">DSGVO-Fokus / EU-Hosting?</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        <tr class="border-b">
+                            <td class="text-left py-3 px-4 font-bold">Google Gemini</td>
+                            <td class="text-center py-3 px-4">Nein (für Business) / Ja (für Privat)</td>
+                            <td class="text-center py-3 px-4">Ja (implizit für Business)</td>
+                            <td class="text-center py-3 px-4">✅</td>
+                        </tr>
+                        <tr class="border-b bg-blue-50">
+                            <td class="text-left py-3 px-4 font-bold">Anthropic Claude</td>
+                            <td class="text-center py-3 px-4">Nein (Opt-in)</td>
+                            <td class="text-center py-3 px-4">Ja (durch Löschung)</td>
+                            <td class="text-center py-3 px-4">✅</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="text-left py-3 px-4 font-bold">OpenAI ChatGPT</td>
+                            <td class="text-center py-3 px-4">Nein (für Business) / Ja (für Privat)</td>
+                            <td class="text-center py-3 px-4">Ja (für Enterprise)</td>
+                            <td class="text-center py-3 px-4">✅</td>
+                        </tr>
+                        <tr class="border-b bg-blue-50">
+                            <td class="text-left py-3 px-4 font-bold">X Grok</td>
+                            <td class="text-center py-3 px-4">Unklar / Ja</td>
+                            <td class="text-center py-3 px-4">Ja (über OCI)</td>
+                            <td class="text-center py-3 px-4">⚠️</td>
+                        </tr>
+                         <tr class="border-b">
+                            <td class="text-left py-3 px-4 font-bold">Mistral AI</td>
+                            <td class="text-center py-3 px-4">Nein</td>
+                            <td class="text-center py-3 px-4">Ja</td>
+                            <td class="text-center py-3 px-4">🇪🇺 (Starker Fokus)</td>
+                        </tr>
+                        <tr class="border-b bg-blue-50">
+                            <td class="text-left py-3 px-4 font-bold">Meta Llama</td>
+                            <td class="text-center py-3 px-4">Nein (laut Richtlinie)</td>
+                            <td class="text-center py-3 px-4">Ja (implizit via Bedrock)</td>
+                            <td class="text-center py-3 px-4">✅</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left py-3 px-4 font-bold">Perplexity AI</td>
+                            <td class="text-center py-3 px-4">Nein (für Enterprise) / Ja (für Privat)</td>
+                            <td class="text-center py-3 px-4">Ja (für Enterprise)</td>
+                            <td class="text-center py-3 px-4">⚠️</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto">
+             <h2 class="section-title">Fazit & Ausblick</h2>
+             <p class="section-subtitle leading-relaxed">Die Wahl des richtigen KI-Anbieters ist keine Einheitslösung. Sie hängt stark von den spezifischen Anforderungen ab: Unternehmen, die tief in das Google-Ökosystem integriert sind, profitieren von Gemini. Wer höchste Sicherheit und ethische Garantien benötigt, findet in Claude einen starken Partner. Mistral AI ist die erste Wahl für datenschutzbewusste europäische Unternehmen. OpenAI bleibt führend in der Anpassbarkeit, während Meta mit Llama durch riesige Kontextfenster und einen Open-Source-Ansatz punktet. Grok bietet unübertroffene Aktualität und Perplexity überzeugt durch Transparenz mit Quellenangaben. Der Markt entwickelt sich rasant, und eine kontinuierliche Neubewertung ist für eine optimale Strategie unerlässlich.</p>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center p-4 mt-12">
+        <p>&copy; 2025 KI-Vergleichsanalyse. Alle Daten basieren auf der zusammengefassten Recherche.</p>
+    </footer>
+
+    <script>
+        const colorPalette = {
+            darkBlue: '#004AAD',
+            mediumBlue: '#008DDA',
+            lightBlue: '#41C9E2',
+            extraLightBlue: '#ACE2E1',
+            gray: '#4A5568'
+        };
+
+        function wrapLabel(str, maxWidth) {
+            if (str.length <= maxWidth) {
+                return str;
+            }
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + word).length <= maxWidth) {
+                    currentLine += `${word} `;
+                } else {
+                    lines.push(currentLine.trim());
+                    currentLine = `${word} `;
+                }
+            }
+            lines.push(currentLine.trim());
+            return lines;
+        }
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            } else {
+                return label;
+            }
+        };
+
+        function initContextLengthChart() {
+            const ctx = document.getElementById('contextLengthChart').getContext('2d');
+            const data = {
+                labels: [
+                    'Meta Llama 4 Scout', 
+                    'Meta Llama 4 Maverick',
+                    'Anthropic Claude (Alle)', 
+                    'Google Gemini 2.5 Pro',
+                    'Mistral Codestral 2',
+                    'OpenAI ChatGPT (Pro/Ent.)', 
+                    'X Grok 3', 
+                    'Perplexity Sonar Pro'
+                ].map(label => wrapLabel(label, 20)),
+                datasets: [{
+                    label: 'Maximale Kontextlänge in Tokens',
+                    data: [3500000, 1000000, 200000, 200000, 256000, 128000, 131072, 200000],
+                    backgroundColor: [
+                        colorPalette.darkBlue, 
+                        colorPalette.mediumBlue, 
+                        colorPalette.lightBlue,
+                        colorPalette.extraLightBlue,
+                        colorPalette.mediumBlue,
+                        colorPalette.lightBlue,
+                        colorPalette.extraLightBlue,
+                        colorPalette.mediumBlue
+                    ],
+                    borderColor: 'white',
+                    borderWidth: 2
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: 'Tokens (Logarithmische Skala)',
+                                font: { size: 14 }
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    if (value >= 1000000) return (value / 1000000) + 'M';
+                                    if (value >= 1000) return (value / 1000) + 'K';
+                                    return value;
+                                }
+                            }
+                        },
+                        y: {
+                           ticks: { font: { size: 12 } }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Maximale Kontextlängen im Vergleich (Log-Skala)',
+                            font: { size: 18, weight: 'bold' },
+                            padding: { top: 10, bottom: 20 }
+                        },
+                        tooltip: {
+                           callbacks: {
+                                title: tooltipTitleCallback,
+                                label: function(context) {
+                                    return ` ${context.parsed.x.toLocaleString('de-DE')} Tokens`;
+                                }
+                           }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function initApiPriceChart() {
+            const ctx = document.getElementById('apiPriceChart').getContext('2d');
+            const data = {
+                labels: [
+                    'Google Gemini 2.5 Pro', 
+                    'Anthropic Claude Opus 4', 
+                    'OpenAI GPT-4.1', 
+                    'X Grok 3', 
+                    'Mistral Medium 3',
+                    'Meta Llama 4 Maverick'
+                ].map(label => wrapLabel(label, 16)),
+                datasets: [
+                    {
+                        label: 'Input / 1 Mio. Tokens',
+                        data: [1.25, 15.00, 2.00, 3.00, 0.40, 0.24],
+                        backgroundColor: colorPalette.mediumBlue,
+                    },
+                    {
+                        label: 'Output / 1 Mio. Tokens',
+                        data: [10.00, 75.00, 8.00, 15.00, 2.00, 0.97],
+                        backgroundColor: colorPalette.darkBlue,
+                    }
+                ]
+            };
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Kosten in USD',
+                                font: { size: 14 }
+                            }
+                        },
+                         x: {
+                           ticks: { font: { size: 12 } }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'API-Kosten pro 1 Mio. Tokens für Top-Modelle (in USD)',
+                            font: { size: 18, weight: 'bold' },
+                            padding: { top: 10, bottom: 20 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback,
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initContextLengthChart();
+            initApiPriceChart();
+        });
+    </script>
+</body>
+</html>
