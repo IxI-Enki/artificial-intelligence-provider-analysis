@@ -6,7 +6,7 @@
 
 </div>
 
-# ${\tiny{ Click }}$ $\Huge{ 𓀣 }$ ${^{𓍹}}$[<sup>here</sup>](https://ixi-enki.github.io/artificial-intelligence-provider-analysis/)${^{𓍺}}$ $\Huge{ 𓀢 }$ ${\tiny{ to\ look\ at\ the\ data. }}$  
+# ${\tiny{ Click }}$ $\Huge{ 𓀣}\tiny{^{𓍹}}$[<sup>here</sup>](https://ixi-enki.github.io/artificial-intelligence-provider-analysis/)${^{𓍺}}\Huge{𓀢 }$ ${\tiny{ to\ look\ at\ the\ data. }}$  
 
 <div align="center">
 
