@@ -1,6 +1,6 @@
 <div align="center">
 
- # $\huge{\color{royalblue}{ ^༼ } \color{skyblue}{ 𓁛\color{white}^{^𓂍} \color{skyblue}𓁞 }\color{royalblue}{ ^༽ }}$
+ # $\Huge{\color{royalblue}{ ^༼ } \color{skyblue}{ 𓁛\color{white}^{^𓂍} \color{skyblue}𓁞 }\color{royalblue}{ ^༽ }}$
 
   ## ${\large\color{royalblue}{ Analysis\ of\ artificial\ intelligence\ providers\ \/\ models }}$
 
