@@ -1,1 +1,1 @@
-# artificial-intelligence-provider-analysis
+Analysis of artificial intelligence providers / models
