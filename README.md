@@ -1,6 +1,6 @@
 <div align="center">
 
-  ## ${\Huge\color{royalblue}{ Analysis\ of\ artificial\ intelligence\ providers\ \/\ models }}$
+  ## ${\large\color{royalblue}{ Analysis\ of\ artificial\ intelligence\ providers\ \/\ models }}$
 
 </div>
 
