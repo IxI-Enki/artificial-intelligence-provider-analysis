@@ -1,825 +1,180 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografik: Die KI-Giganten im Vergleich (Aktualisiert)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F0F4F8;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            background-color: white;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-        .bg-accent-dark {
-            background-color: #004AAD;
-        }
-        .bg-accent-medium {
-            background-color: #008DDA;
-        }
-        .bg-accent-light {
-            background-color: #41C9E2;
-        }
-        .bg-accent-extralight {
-            background-color: #ACE2E1;
-        }
-        .text-accent-dark {
-            color: #004AAD;
-        }
-        .section-title {
-            font-size: 2.25rem;
-            font-weight: 900;
-            color: #1A202C;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        .section-subtitle {
-            font-size: 1.125rem;
-            color: #4A5568;
-            text-align: center;
-            max-width: 48rem;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 3rem;
-        }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            height: 100%;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
-        }
-        .accordion-button {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            padding: 1rem 1.5rem;
-            background-color: #e2e8f0;
-            border-bottom: 1px solid #cbd5e1;
-            font-weight: 600;
-            color: #2d3748;
-            cursor: pointer;
-            text-align: left;
-            border-radius: 0.5rem;
-        }
-        .accordion-button.open {
-             border-bottom-left-radius: 0;
-             border-bottom-right-radius: 0;
-        }
-        .accordion-content {
-            background-color: white;
-            padding: 1rem 1.5rem;
-            border-bottom-left-radius: 0.5rem;
-            border-bottom-right-radius: 0.5rem;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-        .accordion-content.open {
-            max-height: fit-content;
-        }
-        .accordion-item + .accordion-item {
-            margin-top: 1rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Provider Landscape · IxI-Enki</title>
+  <meta name="description" content="Reference comparison of leading AI providers: context, API pricing, privacy, MCP client compatibility.">
+  <link rel="stylesheet" href="showcase_kit/css/showcase.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <script src="showcase_kit/js/showcase.js" defer></script>
+  <script src="showcase_kit/js/page_providers.js" defer></script>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="neu">
 
-    <header class="bg-accent-dark text-white text-center py-12 px-4">
-        <h1 class="text-4xl md:text-6xl font-black tracking-tight">Die KI-Giganten im Vergleich</h1>
-        <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-blue-100">Eine umfassende Analyse der führenden KI-Anbieter: Leistung, Kosten und Alleinstellungsmerkmale im Überblick.</p>
-    </header>
+  <div id="offline-banner" class="offline-banner" data-i18n data-en="Showing last committed data snapshot (fetch failed)." data-de="Letzter committeter Daten-Snapshot (Fetch fehlgeschlagen).">Showing last committed data snapshot (fetch failed).</div>
 
-    <main class="py-12 px-4 md:px-8">
-        
-        <section class="max-w-7xl mx-auto mb-20">
-            <h2 class="section-title">Die Anbieter im Überblick</h2>
-            <p class="section-subtitle">Jeder Anbieter besetzt eine einzigartige Nische im KI-Ökosystem, von Sicherheit und Datenschutz bis hin zu roher Leistung und Echtzeit-Datenanbindung.</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <div class="card">
-                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Google Gemini</h3>
-                    <p class="text-gray-600"><strong>USP:</strong> Tiefe Integration in das Google-Ökosystem und starke multimodale Fähigkeiten.</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Anthropic Claude</h3>
-                    <p class="text-gray-600"><strong>USP:</strong> Fokus auf Sicherheit und Ethik durch "Constitutional AI".</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-2xl font-bold text-accent-dark mb-2">OpenAI ChatGPT</h3>
-                    <p class="text-gray-600"><strong>USP:</strong> Marktführer mit hoher Anpassbarkeit durch benutzerdefinierte GPTs.</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-2xl font-bold text-accent-dark mb-2">X Grok</h3>
-                    <p class="text-gray-600"><strong>USP:</strong> Echtzeit-Datenzugriff durch direkte Integration mit der X-Plattform.</p>
-                </div>
-                 <div class="card">
-                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Mistral AI</h3>
-                    <p class="text-gray-600"><strong>USP:</strong> Europäischer Anbieter mit Fokus auf Datenschutz, Open-Source und Effizienz.</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Meta Llama</h3>
-                    <p class="text-gray-600"><strong>USP:</strong> Open-Source-Modelle mit riesigen Kontextfenstern zur Demokratisierung der KI.</p>
-                </div>
-                <div class="card">
-                    <h3 class="text-2xl font-bold text-accent-dark mb-2">Perplexity AI</h3>
-                    <p class="text-gray-600"><strong>USP:</strong> KI-Suchmaschine, die Antworten mit überprüfbaren Quellenangaben liefert.</p>
-                </div>
-            </div>
-        </section>
+  <div class="bg-layer" aria-hidden="true">
+    <div class="bg-parallax bg-parallax--grid"><div class="bg-grid"></div></div>
+    <div class="bg-parallax bg-parallax--grad">
+      <div class="bg-gradient-blobs">
+        <span class="bg-grad-blob bg-grad-blob--1"></span>
+        <span class="bg-grad-blob bg-grad-blob--2"></span>
+        <span class="bg-grad-blob bg-grad-blob--3"></span>
+        <span class="bg-grad-blob bg-grad-blob--4"></span>
+      </div>
+    </div>
+    <div class="bg-parallax bg-parallax--blob1"><div class="blob blob-1"></div></div>
+    <div class="bg-parallax bg-parallax--blob2"><div class="blob blob-2"></div></div>
+    <div class="bg-parallax bg-parallax--blob3"><div class="blob blob-3"></div></div>
+  </div>
 
-        <section class="max-w-7xl mx-auto mb-20">
-            <h2 class="section-title">Leistung im Fokus: Maximale Kontextlänge</h2>
-            <p class="section-subtitle">Die Kontextlänge ist ein entscheidender Leistungsindikator. Sie bestimmt, wie viele Informationen ein Modell in einer einzigen Anfrage verarbeiten kann. Längere Kontexte ermöglichen die Analyse umfangreicher Dokumente und komplexerer Dialoge.</p>
-            <div class="chart-container h-[400px] md:h-[600px] max-w-6xl">
-                <canvas id="contextLengthChart"></canvas>
-            </div>
-        </section>
-        
-        <section class="max-w-7xl mx-auto mb-20">
-            <h2 class="section-title">Kostenanalyse: API-Preise</h2>
-            <p class="section-subtitle">Die API-Kosten werden pro 1 Million verarbeiteter Tokens berechnet. Ein "Token" entspricht dabei ungefähr 4 Zeichen. Die Preise für Eingabe- (Input) und Ausgabe-Tokens (Output) unterscheiden sich oft erheblich.</p>
-            <div class="chart-container h-[400px] md:h-[600px] max-w-6xl">
-                <canvas id="apiPriceChart"></canvas>
-            </div>
-        </section>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="https://ixi-enki.github.io/">IxI<span class="x">-</span>Enki</a>
+      <nav class="main">
+        <a href="https://ixi-enki.github.io/project-diploma-performance-analysis/" data-i18n data-en="Embeddings" data-de="Embeddings">Embeddings</a>
+        <a href="index.html" class="active" data-i18n data-en="AI providers" data-de="KI-Provider">AI providers</a>
+        <span class="lang-switch" data-lang="en" role="group" aria-label="Language">
+          <span class="ls-knob" aria-hidden="true"></span>
+          <span class="ls-opt" data-lang="en">EN</span>
+          <span class="ls-opt" data-lang="de">DE</span>
+        </span>
+      </nav>
+    </div>
+  </header>
 
-        <section class="max-w-7xl mx-auto mb-20">
-            <h2 class="section-title">Datenschutz & Sicherheit im Vergleich</h2>
-            <p class="section-subtitle">Datenschutz ist ein kritisches Unterscheidungsmerkmal. Die Handhabung von Nutzerdaten für das Modelltraining und die Einhaltung von Vorschriften wie der DSGVO variieren stark zwischen den Anbietern.</p>
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white rounded-lg shadow-md">
-                    <thead class="bg-accent-dark text-white">
-                        <tr>
-                            <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Anbieter</th>
-                            <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Daten für Training genutzt (Standard)?</th>
-                            <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Zero-Data-Retention Option?</th>
-                            <th class="text-center py-3 px-4 uppercase font-semibold text-sm">DSGVO-Fokus / EU-Hosting?</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-700">
-                        <tr class="border-b">
-                            <td class="text-left py-3 px-4 font-bold">Google Gemini</td>
-                            <td class="text-center py-3 px-4">Nein (für Business) / Ja (für Privat)</td>
-                            <td class="text-center py-3 px-4">Ja (implizit für Business)</td>
-                            <td class="text-center py-3 px-4">✅</td>
-                        </tr>
-                        <tr class="border-b bg-blue-50">
-                            <td class="text-left py-3 px-4 font-bold">Anthropic Claude</td>
-                            <td class="text-center py-3 px-4">Nein (Opt-in)</td>
-                            <td class="text-center py-3 px-4">Ja (durch Löschung)</td>
-                            <td class="text-center py-3 px-4">✅</td>
-                        </tr>
-                        <tr class="border-b">
-                            <td class="text-left py-3 px-4 font-bold">OpenAI ChatGPT</td>
-                            <td class="text-center py-3 px-4">Nein (für Business) / Ja (für Privat)</td>
-                            <td class="text-center py-3 px-4">Ja (für Enterprise)</td>
-                            <td class="text-center py-3 px-4">✅</td>
-                        </tr>
-                        <tr class="border-b bg-blue-50">
-                            <td class="text-left py-3 px-4 font-bold">X Grok</td>
-                            <td class="text-center py-3 px-4">Unklar / Ja (über OCI)</td>
-                            <td class="text-center py-3 px-4">Ja (über OCI)</td>
-                            <td class="text-center py-3 px-4">⚠️</td>
-                        </tr>
-                         <tr class="border-b">
-                            <td class="text-left py-3 px-4 font-bold">Mistral AI</td>
-                            <td class="text-center py-3 px-4">Nein</td>
-                            <td class="text-center py-3 px-4">Ja</td>
-                            <td class="text-center py-3 px-4">🇪🇺 (Starker Fokus)</td>
-                        </tr>
-                        <tr class="border-b bg-blue-50">
-                            <td class="text-left py-3 px-4 font-bold">Meta Llama</td>
-                            <td class="text-center py-3 px-4">Nein (laut Richtlinie)</td>
-                            <td class="text-center py-3 px-4">Ja (implizit via Bedrock)</td>
-                            <td class="text-center py-3 px-4">✅</td>
-                        </tr>
-                        <tr>
-                            <td class="text-left py-3 px-4 font-bold">Perplexity AI</td>
-                            <td class="text-center py-3 px-4">Nein (für Enterprise) / Ja (für Privat)</td>
-                            <td class="text-center py-3 px-4">Ja (für Enterprise)</td>
-                            <td class="text-center py-3 px-4">⚠️</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker reveal" data-i18n data-en="Reference dashboard · AI providers" data-de="Referenz-Dashboard · KI-Provider">Reference dashboard · AI providers</p>
+      <h1 class="reveal reveal-d1" data-i18n data-en="AI providers for developers &amp; RAG" data-de="KI-Provider für Entwickler &amp; RAG">AI providers for developers &amp; RAG</h1>
+      <p class="lead reveal reveal-d2" data-i18n
+         data-en="Independent landscape view: context windows, API pricing, privacy posture and MCP client compatibility — pricing/context live from OpenRouter, privacy and MCP curated. Supports provider research, not thesis results."
+         data-de="Unabhängige Landschaftsübersicht: Kontextfenster, API-Preise, Datenschutz und MCP-Client-Kompatibilität — Preise/Kontext live von OpenRouter, Datenschutz und MCP kuratiert. Unterstützt Provider-Recherche, keine Thesis-Ergebnisse.">
+        Independent landscape view: context windows, API pricing, privacy posture and MCP client compatibility — pricing/context live from OpenRouter, privacy and MCP curated.
+      </p>
+      <p id="data-meta" class="mono reveal reveal-d2" style="font-size:.75rem;margin-top:10px"></p>
+    </div>
+  </section>
 
-        <section class="max-w-7xl mx-auto mb-20">
-            <h2 class="section-title">Vorteile und Nachteile</h2>
-            <p class="section-subtitle">Eine detaillierte Betrachtung der Vor- und Nachteile jedes KI-Anbieters hilft bei der strategischen Entscheidungsfindung.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Google Gemini</h3>
-                    <h4 class="text-lg font-semibold text-green-700 mb-2">Vorteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Multimodale Fähigkeiten (Text, Bild, Audio, Video)</li>
-                        <li>Tiefe Integration in das Google-Ökosystem (Gmail, Docs, Drive)</li>
-                        <li>Starke Leistung bei Denk- und Codierungsaufgaben</li>
-                        <li>Personalisierung und adaptives Lernen</li>
-                        <li>Skalierbare Infrastruktur</li>
-                        <li>Breite Sprachunterstützung</li>
-                    </ul>
-                    <h4 class="text-lg font-semibold text-red-700 mt-4 mb-2">Nachteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Datenschutz- & Sicherheitsbedenken (allgemein, v.a. privat)</li>
-                        <li>Eingeschränkte Drittanbieter-Integrationen im Vergleich</li>
-                        <li>Latenz und Leistungsvariabilität unter hoher Last</li>
-                        <li>Kreative Ausgaben benötigen noch Verbesserung</li>
-                        <li>Potenzial für Halluzinationen und ungenaue Ausgaben</li>
-                        <li>Abhängigkeit von Internet und Google Cloud Infrastruktur</li>
-                        <li>Voreingenommenheit und ethische Risiken</li>
-                    </ul>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Anthropic Claude</h3>
-                    <h4 class="text-lg font-semibold text-green-700 mb-2">Vorteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Robuste Sicherheitsprotokolle und ethisches Design ("Constitutional AI")</li>
-                        <li>Hohe Qualität der Sprachgenerierung und menschenähnliche Antworten</li>
-                        <li>Intuitive Konversationsführung</li>
-                        <li>Umfassende Wissensbasis und adaptive Lernfähigkeiten</li>
-                        <li>Enterprise-Grade Sicherheit (SOC II Typ 2, HIPAA-Optionen)</li>
-                        <li>Widerstandsfähigkeit gegen Jailbreaks und Missbrauch</li>
-                    </ul>
-                    <h4 class="text-lg font-semibold text-red-700 mt-4 mb-2">Nachteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Gelegentlich übervorsichtige oder zurückhaltende Antworten</li>
-                        <li>Begrenzte kreative Nuancen im Vergleich zu manchen Wettbewerbern</li>
-                        <li>Inkonsistente Leistung in hochspezialisierten Nischenbereichen</li>
-                        <li>Qualität der Antworten hängt stark von Prompt-Qualität ab</li>
-                        <li>Potenzielle Latenz unter hoher Nachfrage</li>
-                        <li>Eingeschränkte Verfügbarkeit in einigen Regionen</li>
-                    </ul>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">OpenAI ChatGPT</h3>
-                    <h4 class="text-lg font-semibold text-green-700 mb-2">Vorteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Breite Zugänglichkeit und enorme Popularität</li>
-                        <li>Möglichkeit zur Erstellung und zum Austausch benutzerdefinierter GPTs</li>
-                        <li>Starke Leistung in komplexen Aufgaben (Denken, Codierung, Mathematik, Vision)</li>
-                        <li>Skalierbarkeit für Projekte jeder Größe</li>
-                        <li>Kontinuierliche Innovation und regelmäßige Modell-Updates</li>
-                    </ul>
-                    <h4 class="text-lg font-semibold text-red-700 mt-4 mb-2">Nachteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Wissensstand-Grenze (aktuell bis April 2024 für GPT-4)</li>
-                        <li>Standardmäßig kein Internetzugang für ältere Modelle</li>
-                        <li>Schwierigkeiten bei Langform-Inhalten (Wiederholung, Struktur)</li>
-                        <li>Kann Vorurteile aus Trainingsdaten übernehmen</li>
-                        <li>Kontextverständnis-Defizite (Sarkasmus, Humor)</li>
-                        <li>Kann keine klärenden Fragen stellen</li>
-                        <li>Hohe Kosten, insbesondere für API-Anfragen</li>
-                        <li>Mangelnde Transparenz bei Datenverarbeitung</li>
-                        <li>Datenschutz- und Sicherheitsrisiken (Prompt-Injection, Datenaufbewahrung)</li>
-                    </ul>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">X Grok</h3>
-                    <h4 class="text-lg font-semibold text-green-700 mb-2">Vorteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Echtzeit-Datenzugriff und direkte Integration mit der X-Plattform</li>
-                        <li>Verbessertes Verständnis komplexer, nuancierter Abfragen</li>
-                        <li>Personalisierung und adaptives Lernen durch Nutzerfeedback</li>
-                        <li>Fortgeschrittene multimodale Fähigkeiten (Text, Code, Bilder)</li>
-                        <li>Ausgezeichnete Kontextspeicherung in langen Konversationen</li>
-                        <li>Unternehmensskalierbarkeit für hohe Abfragevolumen</li>
-                        <li>Unterstützung für benutzerdefiniertes Fine-Tuning und RAG-Workflows</li>
-                    </ul>
-                    <h4 class="text-lg font-semibold text-red-700 mt-4 mb-2">Nachteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Datenschutzbedenken durch Echtzeit-Webzugriff (Compliance-Risiken)</li>
-                        <li>Hohe Rechenkosten und Infrastruktur-Anforderungen</li>
-                        <li>Ethische Bedenken bei Autonomie in Hochrisikoanwendungen</li>
-                        <li>Potenzial für Fehlinformationen durch Echtzeitdaten</li>
-                        <li>Eingeschränkte Ökosystem-Unterstützung im Vergleich zu etablierten</li>
-                        <li>API-Modelle haben keinen Echtzeit-Internetzugriff (im Gegensatz zur Consumer-Version)</li>
-                    </ul>
-                </div>
-                 <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Mistral AI</h3>
-                    <h4 class="text-lg font-semibold text-green-700 mb-2">Vorteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Hohe Genauigkeit und Effizienz bei großen Datensätzen</li>
-                        <li>Umfassende mehrsprachige Unterstützung</li>
-                        <li>Automatisierte Prozesse zur Reduzierung manueller Fehler</li>
-                        <li>Anpassbare Struktur und offene Integrationen</li>
-                        <li>"Privacy-First"-Ansatz (GDPR-konform, EU-Hosting, Zero Data Retention, Selbsthostung)</li>
-                        <li>Open-Source-Zugänglichkeit und Flexibilität</li>
-                        <li>Kosteneffiziente Modelle mit geringerem Rechenaufwand</li>
-                        <li>Transparenz (Modelle inspizierbar)</li>
-                    </ul>
-                    <h4 class="text-lg font-semibold text-red-700 mt-4 mb-2">Nachteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Potenziell hohe Anfangskosten für Implementierung</li>
-                        <li>Genauigkeit stark abhängig von Datenqualität</li>
-                        <li>Erfordert spezifische KI-Kenntnisse für effektive Nutzung</li>
-                        <li>Risiko der Abhängigkeit von KI-Systemen</li>
-                        <li>Herausforderungen bei der Integration in bestehende komplexe Systeme</li>
-                        <li>Begrenzte Branchenunterstützung im Vergleich zu Marktführern</li>
-                    </ul>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Meta Llama</h3>
-                    <h4 class="text-lg font-semibold text-green-700 mb-2">Vorteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Führende Forschung und Innovation (Deep Learning, NLP, Vision)</li>
-                        <li>Starke Open-Source-Beiträge zur Demokratisierung der KI</li>
-                        <li>Fortschrittliche NLP und starke multimodale Fähigkeiten</li>
-                        <li>Skalierbare KI-Infrastruktur für globale Reichweite</li>
-                        <li>Multimodales Fine-Tuning zur Aufgabenanpassung</li>
-                        <li>Kein Infrastrukturmanagement erforderlich (über Amazon Bedrock)</li>
-                        <li>Native Multimodalität (Llama 4 Modelle)</li>
-                        <li>Außergewöhnlich große Kontextfenster (bis zu 10M Tokens)</li>
-                    </ul>
-                    <h4 class="text-lg font-semibold text-red-700 mt-4 mb-2">Nachteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Allgemeine Datenschutz- und Datenerfassungsbedenken bei Meta</li>
-                        <li>Risiko von Voreingenommenheit und ethischen Problemen durch Trainingsdaten</li>
-                        <li>Zentralisierte Kontrolle durch Tech-Giganten</li>
-                        <li>Potenzielle Verstärkung von Fehlinformationen</li>
-                        <li>Eingeschränkte Transparenz in realen Anwendungen</li>
-                        <li>Abhängigkeit von Metas proprietären Ökosystemen</li>
-                        <li>Ethische und rechtliche Herausforderungen (Urheberrechtsklagen bei Trainingsdaten)</li>
-                        <li>Dokumenten-Fine-Tuning verarbeitet Dokumente als Bilder, nicht nativ als PDF</li>
-                    </ul>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Perplexity AI</h3>
-                    <h4 class="text-lg font-semibold text-green-700 mb-2">Vorteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Verbesserte Entscheidungsgenauigkeit durch fortschrittliche Analyse</li>
-                        <li>Echtzeit-Datenanalyse für proaktives Management</li>
-                        <li>Skalierbarkeit und Anpassungsfähigkeit an verschiedene Branchen</li>
-                        <li>Automatisierung von Routineaufgaben</li>
-                        <li>Personalisierte Benutzererfahrungen</li>
-                        <li>Nahtlose Integration mit bestehenden Technologien</li>
-                        <li>Kostenreduzierung durch Optimierung</li>
-                        <li>Kontinuierliches Lernen und Anpassung an neue Daten</li>
-                        <li>Liefert zitierte Antworten mit verlinkten Quellen (hohe Transparenz)</li>
-                    </ul>
-                    <h4 class="text-lg font-semibold text-red-700 mt-4 mb-2">Nachteile:</h4>
-                    <ul class="list-disc list-inside text-gray-700 space-y-1">
-                        <li>Potenziell hohe Anfangskosten für Implementierung</li>
-                        <li>Genauigkeit stark abhängig von der Qualität der Eingabedaten</li>
-                        <li>Datenschutz- und Sicherheitsbedenken (Datensammlung, Comet Browser)</li>
-                        <li>Begrenzte menschliche Aufsicht kann zu Fehlinterpretationen führen</li>
-                        <li>Potenzieller Arbeitsplatzverlust in bestimmten Sektoren</li>
-                        <li>Komplexität der Implementierung</li>
-                        <li>Risiko algorithmischer Voreingenommenheit</li>
-                        <li>Notwendigkeit kontinuierlicher Updates und Wartung</li>
-                        <li>Kann Halluzinationen (ungenaue/erfundene Infos/Quellen) generieren</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+  <section class="section-tight">
+    <div class="wrap">
+      <h2 class="reveal" data-i18n data-en="Providers at a glance" data-de="Anbieter im Überblick">Providers at a glance</h2>
+      <div id="provider-grid" class="grid grid-3" style="margin-top:16px"></div>
+    </div>
+  </section>
 
-        <section class="max-w-7xl mx-auto mb-20">
-            <h2 class="section-title">Fine-Tuning Optionen & Unternehmensintegrationen</h2>
-            <p class="section-subtitle">Die Anpassbarkeit von KI-Modellen und deren Integration in bestehende Geschäftsprozesse sind entscheidend für den Unternehmenseinsatz.</p>
-            <div class="accordion-container">
-                <div class="accordion-item">
-                    <button class="accordion-button" data-target="google-details">
-                        Google Gemini
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div id="google-details" class="accordion-content">
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Fine-Tuning:</h4>
-                        <ul class="list-disc list-inside text-gray-700 mb-4">
-                            <li>Ja, Anpassung an branchenspezifische Daten zur Verfeinerung des Verständnisses.</li>
-                            <li>Überwachter Lernprozess mit gelabelten Prompt-Antwort-Paaren.</li>
-                            <li>Nutzung von Parameter-Efficient Fine-Tuning (PEFT) zur Kostenreduktion.</li>
-                        </ul>
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Unternehmenslösungen & Integrationen:</h4>
-                        <ul class="list-disc list-inside text-gray-700">
-                            <li>Gemini Code Assist (Standard- & Enterprise-Editionen) mit KI-gestützter Entwicklung.</li>
-                            <li>Anpassung an private Quellcode-Repositories.</li>
-                            <li>Tiefe Integration in Google Cloud-Dienste.</li>
-                            <li>Zapier-Integrationen mit Tausenden von Apps (Google Sheets, Drive, Slack, Outlook, Airtable).</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <button class="accordion-button" data-target="anthropic-details">
-                        Anthropic Claude
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div id="anthropic-details" class="accordion-content">
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Fine-Tuning:</h4>
-                        <ul class="list-disc list-inside text-gray-700 mb-4">
-                            <li>Derzeit keine direkte Fine-Tuning-Option für Kunden über die API.</li>
-                            <li>Modelle sind intern durch RLHF (Reinforcement Learning from Human Feedback) verfeinert.</li>
-                        </ul>
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Unternehmenslösungen & Integrationen:</h4>
-                        <ul class="list-disc list-inside text-gray-700">
-                            <li>Integrationsmöglichkeiten mit Google Workspace (Gmail, Kalender, Dokumente), Atlassian (Jira, Confluence).</li>
-                            <li>Zapier-Integrationen mit Tausenden von Apps.</li>
-                            <li>Weitere Integrationen: Cloudflare, Intercom, Asana, Square, Sentry, PayPal, Linear, Plaid.</li>
-                            <li>Erweiterte Recherchefunktionen für tiefgehende Untersuchungen.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <button class="accordion-button" data-target="openai-details">
-                        OpenAI ChatGPT
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div id="openai-details" class="accordion-content">
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Fine-Tuning:</h4>
-                        <ul class="list-disc list-inside text-gray-700 mb-4">
-                            <li>Ja, Entwickler können Basismodelle mit benutzerdefinierten Daten anpassen (JSONL-Format).</li>
-                            <li>Verbesserung der Genauigkeit und Relevanz für spezialisierte Aufgaben.</li>
-                        </ul>
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Unternehmenslösungen & Integrationen:</h4>
-                        <ul class="list-disc list-inside text-gray-700">
-                            <li>ChatGPT Team- und Enterprise-Pläne mit gemeinsamen benutzerdefinierten GPTs und Admin-Steuerelementen.</li>
-                            <li>Enterprise-Konten bieten Zero-Day-Datenaufbewahrung und erweiterte Compliance-Funktionen (GDPR, HIPAA, SOC 2).</li>
-                            <li>Zapier-Integrationen mit Tausenden von Apps (Google Sheets, Forms, Drive, Slack, Outlook, Dropbox).</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <button class="accordion-button" data-target="grok-details">
-                        X Grok
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div id="grok-details" class="accordion-content">
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Fine-Tuning:</h4>
-                        <ul class="list-disc list-inside text-gray-700 mb-4">
-                            <li>Öffentliche API unterstützt benutzerdefiniertes Fine-Tuning und Retrieval-Augmented Generation (RAG)-Workflows.</li>
-                            <li>Kontinuierliche Trainingszyklen mit Benutzerfeedback (RLHF).</li>
-                        </ul>
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Unternehmenslösungen & Integrationen:</h4>
-                        <ul class="list-disc list-inside text-gray-700">
-                            <li>Grok-Modelle über Oracle Cloud Infrastructure (OCI) Generative AI-Dienste verfügbar.</li>
-                            <li>OCI erweitert Grok um unternehmensgerechte Funktionen für Daten-Governance und -Sicherheit.</li>
-                            <li>Integrationen für Workflow-Automatisierung über Zapier und Albato (über 800 Apps).</li>
-                            <li>Geeignet für Datenextraktion, Codierung und Textzusammenfassung in Domänen wie Finanzen, Gesundheitswesen, Recht.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <button class="accordion-button" data-target="mistral-details">
-                        Mistral AI
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div id="mistral-details" class="accordion-content">
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Fine-Tuning:</h4>
-                        <ul class="list-disc list-inside text-gray-700 mb-4">
-                            <li>Umfassende Fine-Tuning-API über La Plateforme für alle Open-Source- und kommerziellen Modelle.</li>
-                            <li>Anpassung an spezifische Markenstimme, Ausgabeformate oder Domänenexpertise.</li>
-                        </ul>
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Unternehmenslösungen & Integrationen:</h4>
-                        <ul class="list-disc list-inside text-gray-700">
-                            <li>La Plateforme für nahtlose Integration in bestehende Anwendungen.</li>
-                            <li>Umfassende Integrationsunterstützung über Workato (1200+ Konnektoren) und Dienstleister wie Deviniti.</li>
-                            <li>Unterstützung für AWS, Azure, Google Cloud, Kubernetes, Docker und Llama-Stack-Integration.</li>
-                            <li>Skalierbare Architekturen, die GDPR- und HIPAA-konform sind.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <button class="accordion-button" data-target="llama-details">
-                        Meta Llama
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div id="llama-details" class="accordion-content">
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Fine-Tuning:</h4>
-                        <ul class="list-disc list-inside text-gray-700 mb-4">
-                            <li>Multimodales Fine-Tuning verfügbar zur Verbesserung der Genauigkeit bei spezifischen Aufgaben.</li>
-                            <li>Tools für Fine-Tuning und Evaluierung in der neuen API verfügbar.</li>
-                            <li>Verarbeitung von Dokumenten als Bilder für Dokumentenverständnis.</li>
-                        </ul>
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Unternehmenslösungen & Integrationen:</h4>
-                        <ul class="list-disc list-inside text-gray-700">
-                            <li>Llama-Modelle über Amazon Bedrock verfügbar, vereinfacht Zugang und Infrastrukturmanagement.</li>
-                            <li>Zusammenarbeit mit Cerebras und Groq für schnellere Inferenzgeschwindigkeiten.</li>
-                            <li>Neue Llama Stack-Integrationen mit NVIDIA NeMo, IBM, Red Hat und Dell Technologies.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <button class="accordion-button" data-target="perplexity-details">
-                        Perplexity AI
-                        <span class="arrow">▼</span>
-                    </button>
-                    <div id="perplexity-details" class="accordion-content">
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Fine-Tuning:</h4>
-                        <ul class="list-disc list-inside text-gray-700 mb-4">
-                            <li>Interne Verbesserung der Modelle durch Supervised Fine-Tuning (SFT) mit selbstgenerierten Daten.</li>
-                            <li>Keine expliziten Informationen über direkte Fine-Tuning-Optionen für Kunden.</li>
-                        </ul>
-                        <h4 class="text-lg font-semibold text-accent-dark mb-2">Unternehmenslösungen & Integrationen:</h4>
-                        <ul class="list-disc list-inside text-gray-700">
-                            <li>Integrationsmöglichkeiten über Appy Pie Automate (Verbindung mit über 450 Apps).</li>
-                            <li>Enterprise Pro-Plan mit Flexibilität bei KI-Modellen (GPT-4 Omni, Claude 3), Dateiuploads und Benutzerverwaltung.</li>
-                            <li>Sicherheit durch strenge Zugriffskontrollen und anonymisierte Nutzungsdaten.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="card reveal">
+        <h2 data-i18n data-en="Context length" data-de="Kontextlänge">Context length</h2>
+        <p id="context-freshness" class="mono section-freshness"></p>
+        <div class="chart-wrap chart-wrap--tall"><canvas id="context-chart"></canvas></div>
+      </div>
+    </div>
+  </section>
 
-        <section class="max-w-7xl mx-auto mb-20">
-            <h2 class="section-title">Neueste Updates & Zukunftsaussichten</h2>
-            <p class="section-subtitle">Die KI-Branche ist in ständigem Wandel. Hier ein Blick auf die jüngsten Entwicklungen und zukünftige Richtungen der Anbieter.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Google Gemini</h3>
-                    <p class="text-gray-700">
-                        Google treibt die Entwicklung seiner KI-Modelle aggressiv voran. Die fortlaufende Veröffentlichung von Modellen wie **Gemini 1.5 Pro und Gemini 1.5 Flash** im Frühjahr 2025, mit signifikant erweiterten Kontextfenstern und multimodalen Fähigkeiten, zeigt Googles Bestreben, die Führungsposition bei KI-Funktionen zu behaupten. Zukünftige Entwicklungen konzentrieren sich auf noch leistungsfähigere, effizientere und sicherere Modelle.
-                    </p>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Anthropic Claude</h3>
-                    <p class="text-gray-700">
-                        Anthropic hat 2025 seine **Claude 3 Familie** (Opus, Sonnet, Haiku) vorgestellt, die sich durch verbesserte Leistung und Robustheit auszeichnet. Insbesondere **Claude 3.5 Sonnet** (veröffentlicht Juni 2025) bietet hohe Geschwindigkeit und Kosteneffizienz. Zukünftige Entwicklungen werden sich auf die weitere Verfeinerung der "Constitutional AI" und die Erweiterung der Integrationsmöglichkeiten konzentrieren.
-                    </p>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">OpenAI ChatGPT</h3>
-                    <p class="text-gray-700">
-                        OpenAI setzt sein hohes Innovationstempo fort. Die Veröffentlichung von **GPT-4o** (omni-model) im Mai 2025, das native Multimodalität und Echtzeit-Interaktionen ermöglicht, ist ein großer Schritt. Zukünftige Updates werden sich auf die weitere Verbesserung der Multimodalität, die Reduzierung der Latenz und die Einführung spezialisierterer Modelle konzentrieren.
-                    </p>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">X Grok</h3>
-                    <p class="text-gray-700">
-                        X AI hat **Grok 1.5 und 2.0** im Frühjahr 2025 veröffentlicht, mit erheblichen Verbesserungen in den Argumentations- und Codierungsfähigkeiten. Eine öffentliche API für Grok ist weiterhin für Mitte 2025 in Planung, und die Integration in die **Oracle Cloud Infrastructure (OCI)** wird weiter ausgebaut. Zukünftige Schwerpunkte liegen auf der Vertiefung der Echtzeit-Integration mit der X-Plattform und der Verbesserung der Multimodalität.
-                    </p>
-                </div>
-                 <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Mistral AI</h3>
-                    <p class="text-gray-700">
-                        Mistral AI hat seine Modellpalette 2025 stetig erweitert, darunter **Mistral Large, Mistral Small und Codestral** (spezialisiert für Code-Generierung). Der Fokus bleibt auf Effizienz, Datenschutz und Open-Source-Zugänglichkeit. Zukünftige Entwicklungen umfassen die weitere Optimierung der Modelle für Unternehmenseinsätze und die Stärkung des europäischen KI-Ökosystems.
-                    </p>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Meta Llama</h3>
-                    <p class="text-gray-700">
-                        Meta hat 2025 **Llama 3** mit 8B und 70B Parametern veröffentlicht, die verbesserte Argumentationsfähigkeiten und geringere Halluzinationsraten aufweisen. Die Forschung an **Llama 4** und darüber hinaus, insbesondere in Bezug auf noch größere Kontextfenster (bis zu 10 Millionen Tokens in Forschungsprototypen) und Multimodalität, ist in vollem Gange.
-                    </p>
-                </div>
-                <div class="card col-span-1">
-                    <h3 class="text-xl font-bold text-accent-dark mb-3">Perplexity AI</h3>
-                    <p class="text-gray-700">
-                        Perplexity AI hat seine **Pro-Version** mit zusätzlichen Modellen und Fähigkeiten weiterentwickelt. Die Integration von **Sonar** als leistungsstarkes Modell unterstreicht den Fokus auf präzise und zitierte Antworten. Die Entwicklung des KI-gestützten Webbrowsers "Comet" und dessen Beta-Tests erweitern Perplexity's Reichweite über die reine Suche hinaus.
-                    </p>
-                </div>
-            </div>
-        </section>
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="card reveal">
+        <h2 data-i18n data-en="API pricing (USD / 1M tokens)" data-de="API-Preise (USD / 1M Tokens)">API pricing (USD / 1M tokens)</h2>
+        <p id="price-freshness" class="mono section-freshness"></p>
+        <div class="chart-wrap"><canvas id="price-chart"></canvas></div>
+      </div>
+    </div>
+  </section>
 
-        <section class="max-w-7xl mx-auto">
-             <h2 class="section-title">Fazit & Ausblick</h2>
-             <p class="section-subtitle leading-relaxed">Die Wahl des richtigen KI-Anbieters ist keine Einheitslösung. Sie hängt stark von den spezifischen Anforderungen ab: Unternehmen, die tief in das Google-Ökosystem integriert sind, profitieren von Gemini. Wer höchste Sicherheit und ethische Garantien benötigt, findet in Claude einen starken Partner. Mistral AI ist die erste Wahl für datenschutzbewusste europäische Unternehmen. OpenAI bleibt führend in der Anpassbarkeit, während Meta mit Llama durch riesige Kontextfenster und einen Open-Source-Ansatz punktet. Grok bietet unübertroffene Aktualität und Perplexity überzeugt durch Transparenz mit Quellenangaben. Der Markt entwickelt sich rasant, und eine kontinuierliche Neubewertung ist für eine optimale Strategie unerlässlich.</p>
-        </section>
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="card reveal">
+        <h2 data-i18n data-en="Privacy &amp; compliance" data-de="Datenschutz &amp; Compliance">Privacy &amp; compliance</h2>
+        <p id="privacy-freshness" class="mono section-freshness"></p>
+        <div style="overflow-x:auto;margin-top:12px">
+          <table class="data" id="privacy-table">
+            <thead>
+              <tr>
+                <th data-i18n data-en="Provider" data-de="Anbieter">Provider</th>
+                <th data-i18n data-en="Training (default)" data-de="Training (Standard)">Training (default)</th>
+                <th data-i18n data-en="Zero retention" data-de="Zero Retention">Zero retention</th>
+                <th data-i18n data-en="GDPR / EU" data-de="DSGVO / EU">GDPR / EU</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    </main>
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="card reveal">
+        <h2 data-i18n data-en="MCP client reference (industry)" data-de="MCP-Client-Referenz (Industrie)">MCP client reference (industry)</h2>
+        <p id="mcp-freshness" class="mono section-freshness"></p>
+        <p style="margin-top:8px;font-size:.88rem;color:var(--muted)" data-i18n
+           data-en="Reference matrix for remote MCP + OAuth 2.1 — not thesis measurements. See LeoWiki MCP case study for applied compatibility tests."
+           data-de="Referenz-Matrix für Remote-MCP + OAuth 2.1 — keine Thesis-Messungen. Angewandte Kompatibilitätstests in der LeoWiki-MCP-Case-Study.">
+          Reference matrix for remote MCP + OAuth 2.1 — not thesis measurements.
+        </p>
+        <div style="overflow-x:auto;margin-top:12px">
+          <table class="data" id="mcp-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Remote MCP</th>
+                <th>OAuth 2.1</th>
+                <th>Tools</th>
+                <th data-i18n data-en="Notes" data-de="Hinweise">Notes</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div style="margin-top:14px">
+          <a class="btn btn-ghost" href="https://ixi-enki.github.io/pages/leowiki-mcp.html" data-i18n data-en="LeoWiki MCP case study" data-de="LeoWiki-MCP-Case-Study">LeoWiki MCP case study</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <footer class="bg-gray-800 text-white text-center p-4 mt-12">
-        <p>&copy; 2025 KI-Vergleichsanalyse. Alle Daten basieren auf der zusammengefassten Recherche. Stand: Juni 2025.</p>
-    </footer>
+  <section class="section-tight">
+    <div class="wrap">
+      <h2 class="reveal" data-i18n data-en="Details" data-de="Details">Details</h2>
+      <p id="details-freshness" class="mono section-freshness reveal"></p>
+      <div id="accordion-root" style="margin-top:14px"></div>
+    </div>
+  </section>
 
-    <script>
-        const colorPalette = {
-            darkBlue: '#004AAD',
-            mediumBlue: '#008DDA',
-            lightBlue: '#41C9E2',
-            extraLightBlue: '#ACE2E1',
-            gray: '#4A5568'
-        };
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="card reveal">
+        <h2 data-i18n data-en="Data changelog" data-de="Daten-Changelog">Data changelog</h2>
+        <ul id="changelog-list" style="margin-top:10px;color:var(--muted);font-size:.88rem"></ul>
+      </div>
+    </div>
+  </section>
 
-        function wrapLabel(str, maxWidth) {
-            if (str.length <= maxWidth) {
-                return str;
-            }
-            const words = str.split(' ');
-            const lines = [];
-            let currentLine = '';
-            for (const word of words) {
-                if ((currentLine + word).length <= maxWidth) {
-                    currentLine += `${word} `;
-                } else {
-                    lines.push(currentLine.trim());
-                    currentLine = `${word} `;
-                }
-            }
-            lines.push(currentLine.trim());
-            return lines;
-        }
-
-        const tooltipTitleCallback = (tooltipItems) => {
-            const item = tooltipItems[0];
-            let label = item.chart.data.labels[item.dataIndex];
-            if (Array.isArray(label)) {
-                return label.join(' ');
-            } else {
-                return label;
-            }
-        };
-
-        function initContextLengthChart() {
-            const ctx = document.getElementById('contextLengthChart').getContext('2d');
-            const data = {
-                labels: [
-                    'Meta Llama 4 Scout (3.5M)', 
-                    'Meta Llama 4 Maverick (1M)',
-                    'Mistral Codestral 2 (256K)',
-                    'Anthropic Claude (200K)', 
-                    'Google Gemini 2.5 Pro (200K)',
-                    'Perplexity Sonar Pro (200K)',
-                    'X Grok 3 (131K)', 
-                    'OpenAI ChatGPT (128K)'
-                ].map(label => wrapLabel(label, 20)),
-                datasets: [{
-                    label: 'Maximale Kontextlänge in Tokens',
-                    data: [3500000, 1000000, 256000, 200000, 200000, 200000, 131072, 128000],
-                    backgroundColor: [
-                        colorPalette.darkBlue, 
-                        colorPalette.mediumBlue, 
-                        colorPalette.lightBlue,
-                        colorPalette.extraLightBlue,
-                        colorPalette.mediumBlue,
-                        colorPalette.lightBlue,
-                        colorPalette.extraLightBlue,
-                        colorPalette.darkBlue
-                    ],
-                    borderColor: 'white',
-                    borderWidth: 2
-                }]
-            };
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: data,
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'logarithmic',
-                            title: {
-                                display: true,
-                                text: 'Tokens (Logarithmische Skala)',
-                                font: { size: 14 }
-                            },
-                            ticks: {
-                                callback: function(value, index, values) {
-                                    if (value >= 1000000) return (value / 1000000) + 'M';
-                                    if (value >= 1000) return (value / 1000) + 'K';
-                                    return value;
-                                }
-                            }
-                        },
-                        y: {
-                           ticks: { font: { size: 12 } }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Maximale Kontextlängen im Vergleich (Log-Skala)',
-                            font: { size: 18, weight: 'bold' },
-                            padding: { top: 10, bottom: 20 }
-                        },
-                        tooltip: {
-                           callbacks: {
-                                title: tooltipTitleCallback,
-                                label: function(context) {
-                                    return ` ${context.parsed.x.toLocaleString('de-DE')} Tokens`;
-                                }
-                           }
-                        }
-                    }
-                }
-            });
-        }
-        
-        function initApiPriceChart() {
-            const ctx = document.getElementById('apiPriceChart').getContext('2d');
-            const data = {
-                labels: [
-                    'Google Gemini 2.5 Pro', 
-                    'Anthropic Claude Opus 4', 
-                    'OpenAI GPT-4.1', 
-                    'X Grok 3', 
-                    'Mistral Medium 3',
-                    'Meta Llama 4 Maverick'
-                ].map(label => wrapLabel(label, 16)),
-                datasets: [
-                    {
-                        label: 'Input / 1 Mio. Tokens',
-                        data: [1.25, 15.00, 2.00, 3.00, 0.40, 0.24],
-                        backgroundColor: colorPalette.mediumBlue,
-                    },
-                    {
-                        label: 'Output / 1 Mio. Tokens',
-                        data: [10.00, 75.00, 8.00, 15.00, 2.00, 0.97],
-                        backgroundColor: colorPalette.darkBlue,
-                    }
-                ]
-            };
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Kosten in USD',
-                                font: { size: 14 }
-                            }
-                        },
-                         x: {
-                           ticks: { font: { size: 12 } }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'API-Kosten pro 1 Mio. Tokens für Top-Modelle (in USD)',
-                            font: { size: 18, weight: 'bold' },
-                            padding: { top: 10, bottom: 20 }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: tooltipTitleCallback,
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function setupAccordions() {
-            document.querySelectorAll('.accordion-button').forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetId = button.dataset.target;
-                    const content = document.getElementById(targetId);
-                    
-                    const isOpen = content.classList.contains('open');
-
-                    document.querySelectorAll('.accordion-content.open').forEach(openContent => {
-                        openContent.classList.remove('open');
-                        openContent.previousElementSibling.classList.remove('open');
-                        openContent.previousElementSibling.querySelector('.arrow').textContent = '▼';
-                    });
-
-                    if (!isOpen) {
-                        content.classList.add('open');
-                        button.classList.add('open');
-                        button.querySelector('.arrow').textContent = '▲';
-                    }
-                });
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            initContextLengthChart();
-            initApiPriceChart();
-            setupAccordions();
-        });
-    </script>
+  <footer class="site">
+    <div class="wrap footer-inner">
+      <div class="footer-col">
+        <p class="footer-h" data-i18n data-en="About" data-de="Über">About</p>
+        <p data-i18n data-en="Curated provider reference by Jan Ritt (IxI-Enki). Edit data/providers.yaml and re-run the weekly workflow." data-de="Kuratierte Provider-Referenz von Jan Ritt (IxI-Enki). Bearbeite data/providers.yaml und starte den wöchentlichen Workflow.">Curated provider reference by Jan Ritt (IxI-Enki).</p>
+      </div>
+      <div class="footer-col">
+        <p class="footer-h" data-i18n data-en="Links" data-de="Links">Links</p>
+        <a href="https://ixi-enki.github.io/">Portfolio</a>
+        <a href="https://ixi-enki.github.io/project-diploma-performance-analysis/">MTEB DE embeddings</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-h" data-i18n data-en="Data" data-de="Daten">Data</p>
+        <a href="https://github.com/IxI-Enki/artificial-intelligence-provider-analysis">GitHub repo</a>
+        <a href="data/providers.json">JSON export</a>
+      </div>
+    </div>
+    <div class="wrap footer-base">
+      <span>Jan Ritt · HTL Leonding</span>
+      <span data-i18n data-en="Updated weekly (Mon 06:00 UTC)" data-de="Wöchentlich aktualisiert (Mo 06:00 UTC)">Updated weekly (Mon 06:00 UTC)</span>
+    </div>
+  </footer>
 </body>
 </html>

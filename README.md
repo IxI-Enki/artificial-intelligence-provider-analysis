@@ -1,17 +1,35 @@
-<div align="center">
+# AI Provider Landscape
 
- ## $\Huge{\color{royalblue}{ ^༼ } \color{skyblue}{ 𓁛\color{white}^{^𓂍} \color{skyblue}𓁞 }\color{royalblue}{ ^༽ }}$
+Reference comparison of leading **AI providers** for developers and RAG architecture: context windows, API pricing, privacy, MCP client compatibility.
 
- # ${\large\color{royalblue}{ Analysis\ of\ AI\ provider \/ models }}$
+**Live:** [ixi-enki.github.io/artificial-intelligence-provider-analysis/](https://ixi-enki.github.io/artificial-intelligence-provider-analysis/)
 
-</div>
+## Purpose
 
-# ${\tiny{ Click }}$ $\Huge{ 𓀣}\tiny{^{𓍹}}$[<sup>here</sup>](https://ixi-enki.github.io/artificial-intelligence-provider-analysis/)${^{𓍺}}\Huge{𓀢 }$ ${\tiny{ to\ look\ at\ the\ data. }}$  
+Independent provider research dashboard — supports technology selection before building MCP/RAG systems. **Not** diploma-thesis results.
 
-<div align="center">
+## Data
 
-<!--  ##  $\Huge\color{royalblue}{ ༼\ \ ༐༝༐\ \ ༽ }$ -->
-  
-<!--  $\large\color{skyblue}^{ ꂅnki }$  -->
+| File | Description |
+|------|-------------|
+| `data/providers.yaml` | Curated source (edit manually) |
+| `data/providers.json` | Generated for the UI |
+| `data/manifest.json` | `generated_at`, changelog |
 
-</div>
+Merged **weekly** (Monday 06:00 UTC) via GitHub Actions.
+
+## Local refresh
+
+```powershell
+pip install -r scripts/requirements.txt
+python scripts/fetch_providers.py
+python scripts/validate_json.py
+```
+
+## Sister dashboard
+
+[MTEB DE embeddings](https://ixi-enki.github.io/project-diploma-performance-analysis/)
+
+## Author
+
+Jan Ritt · [IxI-Enki](https://ixi-enki.github.io/)

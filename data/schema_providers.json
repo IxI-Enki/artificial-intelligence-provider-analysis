@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Providers Dashboard",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "providers"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "generated_at": { "type": "string" },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "usp_en", "usp_de", "context_tokens"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "usp_en": { "type": "string" },
+          "usp_de": { "type": "string" },
+          "flagship_model": { "type": "string" },
+          "context_tokens": { "type": "number" },
+          "price_input_usd": { "type": ["number", "null"] },
+          "price_output_usd": { "type": ["number", "null"] },
+          "price_verified_at": { "type": ["string", "null"] },
+          "privacy": { "type": "object" },
+          "mcp": { "type": "object" },
+          "pros_en": { "type": "array" },
+          "cons_en": { "type": "array" },
+          "pros_de": { "type": "array" },
+          "cons_de": { "type": "array" },
+          "fine_tuning_en": { "type": "array" },
+          "fine_tuning_de": { "type": "array" },
+          "enterprise_en": { "type": "array" },
+          "enterprise_de": { "type": "array" }
+        }
+      }
+    },
+    "mcp_clients": { "type": "array" }
+  }
+}

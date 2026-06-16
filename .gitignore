@@ -1,0 +1,13 @@
+graphify-out/
+
+__pycache__/
+*.pyc
+.pytest_cache/
+
+.env
+venv/
+.venv/
+
+.DS_Store
+Thumbs.db
+

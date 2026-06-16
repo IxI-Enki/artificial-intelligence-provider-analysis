@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "providers", "mcp_clients"],
+  "properties": {
+    "schema_version": { "type": ["string", "integer"] },
+    "generated_at": { "type": "string" },
+    "providers": { "type": "array", "minItems": 1 },
+    "mcp_clients": { "type": "array" }
+  }
+}

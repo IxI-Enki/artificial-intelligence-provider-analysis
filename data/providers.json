@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-16T15:05:50.913334+00:00",
+  "verified_at": "2026-06-16",
+  "mcp_last_reviewed": "2026-02-15",
+  "source": "curated_yaml+openrouter",
+  "live_fetch": {
+    "source": "openrouter",
+    "ok": true,
+    "fetched_at": "2026-06-16T15:05:50.913334+00:00",
+    "models_matched": 7,
+    "model_map": {
+      "google_gemini": "google/gemini-2.5-pro",
+      "anthropic_claude": "anthropic/claude-opus-4.6",
+      "openai": "openai/gpt-4.1",
+      "x_grok": "x-ai/grok-4.20",
+      "mistral": "mistralai/mistral-medium-3",
+      "meta_llama": "meta-llama/llama-4-maverick",
+      "perplexity": "perplexity/sonar-pro"
+    }
+  },
+  "providers": [
+    {
+      "id": "google_gemini",
+      "name": "Google Gemini",
+      "logo": "showcase_kit/img/logos/google_gemini.svg",
+      "flagship_model": "Gemini 2.5 Pro",
+      "usp_en": "Deep Google ecosystem integration and strong multimodal capabilities.",
+      "usp_de": "Tiefe Google-Ökosystem-Integration und starke multimodale Fähigkeiten.",
+      "context_tokens": 1048576,
+      "api_input_per_million": 1.25,
+      "api_output_per_million": 10.0,
+      "training_default": "No (Business) / Yes (Consumer)",
+      "zero_data_retention": "[OK] Business tier",
+      "gdpr_focus": "[OK]",
+      "pros_en": [
+        "Multimodal (text, image, audio, video)",
+        "Google Workspace integration",
+        "Strong reasoning and coding"
+      ],
+      "cons_en": [
+        "Privacy concerns on consumer tier",
+        "Latency under load"
+      ],
+      "fine_tuning_en": [
+        "Industry-specific fine-tuning via Vertex AI",
+        "PEFT support for cost reduction"
+      ],
+      "enterprise_en": [
+        "Gemini Code Assist",
+        "Google Cloud integrations",
+        "Zapier connectors"
+      ],
+      "field_sources": {
+        "context_tokens": {
+          "value": 1048576,
+          "source": "openrouter",
+          "model_slug": "google/gemini-2.5-pro",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_input_per_million": {
+          "value": 1.25,
+          "source": "openrouter",
+          "model_slug": "google/gemini-2.5-pro",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_output_per_million": {
+          "value": 10.0,
+          "source": "openrouter",
+          "model_slug": "google/gemini-2.5-pro",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        }
+      }
+    },
+    {
+      "id": "anthropic_claude",
+      "name": "Anthropic Claude",
+      "logo": "showcase_kit/img/logos/anthropic.svg",
+      "flagship_model": "Claude Opus 4",
+      "usp_en": "Safety-first design with Constitutional AI.",
+      "usp_de": "Safety-first Design mit Constitutional AI.",
+      "context_tokens": 1000000,
+      "api_input_per_million": 5.0,
+      "api_output_per_million": 25.0,
+      "training_default": "No (opt-in)",
+      "zero_data_retention": "[OK]",
+      "gdpr_focus": "[OK]",
+      "pros_en": [
+        "Robust safety protocols",
+        "High-quality long-form text",
+        "Enterprise SOC II / HIPAA options"
+      ],
+      "cons_en": [
+        "Occasionally over-cautious responses",
+        "No direct customer fine-tuning API"
+      ],
+      "fine_tuning_en": [
+        "Internal RLHF only"
+      ],
+      "enterprise_en": [
+        "Google Workspace, Atlassian, Zapier integrations"
+      ],
+      "field_sources": {
+        "context_tokens": {
+          "value": 1000000,
+          "source": "openrouter",
+          "model_slug": "anthropic/claude-opus-4.6",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_input_per_million": {
+          "value": 5.0,
+          "source": "openrouter",
+          "model_slug": "anthropic/claude-opus-4.6",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_output_per_million": {
+          "value": 25.0,
+          "source": "openrouter",
+          "model_slug": "anthropic/claude-opus-4.6",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        }
+      }
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI ChatGPT",
+      "logo": "showcase_kit/img/logos/openai.svg",
+      "flagship_model": "GPT-4.1",
+      "usp_en": "Market leader with custom GPTs and broad tooling.",
+      "usp_de": "Marktführer mit Custom GPTs und breitem Tooling.",
+      "context_tokens": 1047576,
+      "api_input_per_million": 2.0,
+      "api_output_per_million": 8.0,
+      "training_default": "No (Business) / Yes (Consumer)",
+      "zero_data_retention": "[OK] Enterprise",
+      "gdpr_focus": "[OK]",
+      "pros_en": [
+        "Wide accessibility and ecosystem",
+        "Strong complex reasoning",
+        "Continuous model updates"
+      ],
+      "cons_en": [
+        "High API cost for top models",
+        "Knowledge cutoff on older tiers"
+      ],
+      "fine_tuning_en": [
+        "Custom fine-tuning via JSONL datasets"
+      ],
+      "enterprise_en": [
+        "Team and Enterprise plans",
+        "Zero-day retention on Enterprise"
+      ],
+      "field_sources": {
+        "context_tokens": {
+          "value": 1047576,
+          "source": "openrouter",
+          "model_slug": "openai/gpt-4.1",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_input_per_million": {
+          "value": 2.0,
+          "source": "openrouter",
+          "model_slug": "openai/gpt-4.1",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_output_per_million": {
+          "value": 8.0,
+          "source": "openrouter",
+          "model_slug": "openai/gpt-4.1",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        }
+      }
+    },
+    {
+      "id": "x_grok",
+      "name": "X Grok",
+      "logo": "showcase_kit/img/logos/x_grok.svg",
+      "flagship_model": "Grok 3",
+      "usp_en": "Real-time X platform data integration.",
+      "usp_de": "Echtzeit-Integration mit der X-Plattform.",
+      "context_tokens": 2000000,
+      "api_input_per_million": 1.25,
+      "api_output_per_million": 2.5,
+      "training_default": "Unclear / via OCI",
+      "zero_data_retention": "[OK] via OCI",
+      "gdpr_focus": "[WARN]",
+      "pros_en": [
+        "Real-time social/web context",
+        "Strong long conversation memory"
+      ],
+      "cons_en": [
+        "Privacy/compliance risks with live data",
+        "Smaller third-party ecosystem"
+      ],
+      "fine_tuning_en": [
+        "Custom fine-tuning and RAG via API"
+      ],
+      "enterprise_en": [
+        "Oracle Cloud Infrastructure deployment"
+      ],
+      "field_sources": {
+        "context_tokens": {
+          "value": 2000000,
+          "source": "openrouter",
+          "model_slug": "x-ai/grok-4.20",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_input_per_million": {
+          "value": 1.25,
+          "source": "openrouter",
+          "model_slug": "x-ai/grok-4.20",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_output_per_million": {
+          "value": 2.5,
+          "source": "openrouter",
+          "model_slug": "x-ai/grok-4.20",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        }
+      }
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral AI",
+      "logo": "showcase_kit/img/logos/mistral.svg",
+      "flagship_model": "Mistral Medium 3",
+      "usp_en": "European provider — privacy, open weights, efficiency.",
+      "usp_de": "Europäischer Anbieter — Datenschutz, Open Weights, Effizienz.",
+      "context_tokens": 131072,
+      "api_input_per_million": 0.4,
+      "api_output_per_million": 2.0,
+      "training_default": "No",
+      "zero_data_retention": "[OK]",
+      "gdpr_focus": "[OK] EU focus",
+      "pros_en": [
+        "Privacy-first / GDPR",
+        "Open-source model access",
+        "Cost-efficient inference"
+      ],
+      "cons_en": [
+        "Smaller enterprise footprint vs US giants"
+      ],
+      "fine_tuning_en": [
+        "La Plateforme fine-tuning API"
+      ],
+      "enterprise_en": [
+        "AWS, Azure, GCP, Kubernetes support"
+      ],
+      "field_sources": {
+        "context_tokens": {
+          "value": 131072,
+          "source": "openrouter",
+          "model_slug": "mistralai/mistral-medium-3",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_input_per_million": {
+          "value": 0.4,
+          "source": "openrouter",
+          "model_slug": "mistralai/mistral-medium-3",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_output_per_million": {
+          "value": 2.0,
+          "source": "openrouter",
+          "model_slug": "mistralai/mistral-medium-3",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        }
+      }
+    },
+    {
+      "id": "meta_llama",
+      "name": "Meta Llama",
+      "logo": "showcase_kit/img/logos/meta.svg",
+      "flagship_model": "Llama 4 Maverick",
+      "usp_en": "Open weights with very large context windows.",
+      "usp_de": "Open Weights mit sehr großen Kontextfenstern.",
+      "context_tokens": 1048576,
+      "api_input_per_million": 0.15,
+      "api_output_per_million": 0.6,
+      "training_default": "No (policy)",
+      "zero_data_retention": "[OK] via Bedrock",
+      "gdpr_focus": "[OK]",
+      "pros_en": [
+        "Open-source democratization",
+        "Huge context (up to 1M tokens)",
+        "Multimodal Llama 4 family"
+      ],
+      "cons_en": [
+        "Meta data-collection concerns",
+        "Self-hosting ops overhead"
+      ],
+      "fine_tuning_en": [
+        "Multimodal fine-tuning tools"
+      ],
+      "enterprise_en": [
+        "Amazon Bedrock, Groq, Cerebras partners"
+      ],
+      "field_sources": {
+        "context_tokens": {
+          "value": 1048576,
+          "source": "openrouter",
+          "model_slug": "meta-llama/llama-4-maverick",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_input_per_million": {
+          "value": 0.15,
+          "source": "openrouter",
+          "model_slug": "meta-llama/llama-4-maverick",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_output_per_million": {
+          "value": 0.6,
+          "source": "openrouter",
+          "model_slug": "meta-llama/llama-4-maverick",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        }
+      }
+    },
+    {
+      "id": "perplexity",
+      "name": "Perplexity AI",
+      "logo": "showcase_kit/img/logos/perplexity.svg",
+      "flagship_model": "Sonar Pro",
+      "usp_en": "Cited answers with verifiable sources.",
+      "usp_de": "Zitierte Antworten mit überprüfbaren Quellen.",
+      "context_tokens": 200000,
+      "api_input_per_million": 3.0,
+      "api_output_per_million": 15.0,
+      "training_default": "No (Enterprise) / Yes (Consumer)",
+      "zero_data_retention": "[OK] Enterprise",
+      "gdpr_focus": "[WARN]",
+      "pros_en": [
+        "Source-linked responses",
+        "Real-time web retrieval"
+      ],
+      "cons_en": [
+        "Hallucinated citations possible",
+        "Privacy concerns on consumer tier"
+      ],
+      "fine_tuning_en": [
+        "Internal SFT only"
+      ],
+      "enterprise_en": [
+        "Enterprise Pro with model choice"
+      ],
+      "field_sources": {
+        "context_tokens": {
+          "value": 200000,
+          "source": "openrouter",
+          "model_slug": "perplexity/sonar-pro",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_input_per_million": {
+          "value": 3.0,
+          "source": "openrouter",
+          "model_slug": "perplexity/sonar-pro",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        },
+        "api_output_per_million": {
+          "value": 15.0,
+          "source": "openrouter",
+          "model_slug": "perplexity/sonar-pro",
+          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+        }
+      }
+    }
+  ],
+  "mcp_clients": [
+    {
+      "name": "Claude",
+      "remote_mcp": "[OK]",
+      "oauth21": "[OK]",
+      "tools": "[OK]",
+      "notes_en": "Full remote MCP + OAuth 2.1 (industry reference, Feb 2026).",
+      "notes_de": "Volles Remote-MCP + OAuth 2.1 (Industrie-Referenz, Feb 2026)."
+    },
+    {
+      "name": "ChatGPT",
+      "remote_mcp": "[OK]",
+      "oauth21": "[OK]",
+      "tools": "[OK]",
+      "notes_en": "Remote MCP connectors with OAuth 2.1.",
+      "notes_de": "Remote-MCP-Connectors mit OAuth 2.1."
+    },
+    {
+      "name": "Mistral Le Chat",
+      "remote_mcp": "[OK]",
+      "oauth21": "[OK]",
+      "tools": "[OK]",
+      "notes_en": "Remote MCP support in Le Chat.",
+      "notes_de": "Remote-MCP-Support in Le Chat."
+    },
+    {
+      "name": "Gemini (consumer)",
+      "remote_mcp": "[WARN]",
+      "oauth21": "[WARN]",
+      "tools": "[WARN]",
+      "notes_en": "No consumer remote MCP with OAuth 2.1 as of Feb 2026.",
+      "notes_de": "Kein Consumer-Remote-MCP mit OAuth 2.1 mit Stand Feb 2026."
+    },
+    {
+      "name": "Copilot (consumer)",
+      "remote_mcp": "[WARN]",
+      "oauth21": "[WARN]",
+      "tools": "[WARN]",
+      "notes_en": "No consumer remote MCP with OAuth 2.1 as of Feb 2026.",
+      "notes_de": "Kein Consumer-Remote-MCP mit OAuth 2.1 mit Stand Feb 2026."
+    }
+  ]
+}
