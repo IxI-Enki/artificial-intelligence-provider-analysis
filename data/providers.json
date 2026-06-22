@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-06-16T15:05:50.913334+00:00",
+  "generated_at": "2026-06-22T11:33:00.066986+00:00",
   "verified_at": "2026-06-16",
   "mcp_last_reviewed": "2026-02-15",
   "source": "curated_yaml+openrouter",
   "live_fetch": {
     "source": "openrouter",
     "ok": true,
-    "fetched_at": "2026-06-16T15:05:50.913334+00:00",
+    "fetched_at": "2026-06-22T11:33:00.066986+00:00",
     "models_matched": 7,
     "model_map": {
       "google_gemini": "google/gemini-2.5-pro",
@@ -56,19 +56,19 @@
           "value": 1048576,
           "source": "openrouter",
           "model_slug": "google/gemini-2.5-pro",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_input_per_million": {
           "value": 1.25,
           "source": "openrouter",
           "model_slug": "google/gemini-2.5-pro",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_output_per_million": {
           "value": 10.0,
           "source": "openrouter",
           "model_slug": "google/gemini-2.5-pro",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         }
       }
     },
@@ -105,19 +105,19 @@
           "value": 1000000,
           "source": "openrouter",
           "model_slug": "anthropic/claude-opus-4.6",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_input_per_million": {
           "value": 5.0,
           "source": "openrouter",
           "model_slug": "anthropic/claude-opus-4.6",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_output_per_million": {
           "value": 25.0,
           "source": "openrouter",
           "model_slug": "anthropic/claude-opus-4.6",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         }
       }
     },
@@ -155,19 +155,19 @@
           "value": 1047576,
           "source": "openrouter",
           "model_slug": "openai/gpt-4.1",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_input_per_million": {
           "value": 2.0,
           "source": "openrouter",
           "model_slug": "openai/gpt-4.1",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_output_per_million": {
           "value": 8.0,
           "source": "openrouter",
           "model_slug": "openai/gpt-4.1",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         }
       }
     },
@@ -203,19 +203,19 @@
           "value": 2000000,
           "source": "openrouter",
           "model_slug": "x-ai/grok-4.20",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_input_per_million": {
           "value": 1.25,
           "source": "openrouter",
           "model_slug": "x-ai/grok-4.20",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_output_per_million": {
           "value": 2.5,
           "source": "openrouter",
           "model_slug": "x-ai/grok-4.20",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         }
       }
     },
@@ -251,19 +251,19 @@
           "value": 131072,
           "source": "openrouter",
           "model_slug": "mistralai/mistral-medium-3",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_input_per_million": {
           "value": 0.4,
           "source": "openrouter",
           "model_slug": "mistralai/mistral-medium-3",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_output_per_million": {
           "value": 2.0,
           "source": "openrouter",
           "model_slug": "mistralai/mistral-medium-3",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         }
       }
     },
@@ -300,19 +300,19 @@
           "value": 1048576,
           "source": "openrouter",
           "model_slug": "meta-llama/llama-4-maverick",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_input_per_million": {
           "value": 0.15,
           "source": "openrouter",
           "model_slug": "meta-llama/llama-4-maverick",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_output_per_million": {
           "value": 0.6,
           "source": "openrouter",
           "model_slug": "meta-llama/llama-4-maverick",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         }
       }
     },
@@ -348,19 +348,19 @@
           "value": 200000,
           "source": "openrouter",
           "model_slug": "perplexity/sonar-pro",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_input_per_million": {
           "value": 3.0,
           "source": "openrouter",
           "model_slug": "perplexity/sonar-pro",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         },
         "api_output_per_million": {
           "value": 15.0,
           "source": "openrouter",
           "model_slug": "perplexity/sonar-pro",
-          "fetched_at": "2026-06-16T15:05:50.913334+00:00"
+          "fetched_at": "2026-06-22T11:33:00.066986+00:00"
         }
       }
     }
