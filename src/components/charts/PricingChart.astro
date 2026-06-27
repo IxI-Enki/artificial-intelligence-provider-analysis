@@ -1,0 +1,52 @@
+---
+interface Provider {
+  flagship_model?: string;
+  api_input_per_million?: number | null;
+  api_output_per_million?: number | null;
+}
+
+interface Props {
+  providers: Provider[];
+  chartId?: string;
+}
+
+const { providers, chartId = 'price-chart' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const labels = JSON.stringify(providers.map((p) => p.flagship_model ?? 'n/a'));
+const inputData = JSON.stringify(providers.map((p) => p.api_input_per_million ?? null));
+const outputData = JSON.stringify(providers.map((p) => p.api_output_per_million ?? null));
+---
+
+<div class="chart-wrap">
+  <canvas
+    id={chartId}
+    data-labels={labels}
+    data-input={inputData}
+    data-output={outputData}
+  ></canvas>
+</div>
+<script is:inline src={base + 'vendor/chart.umd.min.js'}></script>
+<script define:vars={{ chartId }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById(chartId);
+    if (!canvas || typeof Chart === 'undefined') return;
+    const labels = JSON.parse(canvas.dataset.labels || '[]');
+    const inputData = JSON.parse(canvas.dataset.input || '[]');
+    const outputData = JSON.parse(canvas.dataset.output || '[]');
+    new Chart(canvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Input / 1M USD', data: inputData, backgroundColor: '#6ea8fe' },
+          { label: 'Output / 1M USD', data: outputData, backgroundColor: '#a78bfa' },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true } },
+      },
+    });
+  });
+</script>

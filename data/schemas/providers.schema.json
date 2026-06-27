@@ -5,7 +5,47 @@
   "properties": {
     "schema_version": { "type": ["string", "integer"] },
     "generated_at": { "type": "string" },
-    "providers": { "type": "array", "minItems": 1 },
+    "providers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "deployment_type"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "deployment_type": {
+            "type": "string",
+            "enum": ["api", "self_hosted", "both"]
+          },
+          "model_category": {
+            "type": "string",
+            "enum": ["chat", "embedding", "multimodal", "other"]
+          },
+          "context_tokens": { "type": ["integer", "null"] },
+          "api_input_per_million": { "type": ["number", "null"] },
+          "api_output_per_million": { "type": ["number", "null"] },
+          "embedding_dimensions": { "type": ["integer", "null"] },
+          "field_sources": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["value", "source", "source_quality"],
+              "properties": {
+                "value": {},
+                "source": { "type": "string" },
+                "source_quality": {
+                  "type": "string",
+                  "enum": ["primary", "aggregator", "curated", "inferred"]
+                },
+                "model_slug": { "type": "string" },
+                "fetched_at": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
     "mcp_clients": { "type": "array" }
   }
 }

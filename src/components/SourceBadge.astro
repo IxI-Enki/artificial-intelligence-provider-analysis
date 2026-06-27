@@ -1,0 +1,21 @@
+---
+interface FieldSource {
+  source_quality?: string;
+}
+
+interface Props {
+  field: string;
+  fieldSources?: Record<string, FieldSource>;
+}
+
+const { field, fieldSources = {} } = Astro.props;
+const src = fieldSources[field];
+const quality = src?.source_quality;
+const show = quality === 'aggregator' || quality === 'inferred';
+---
+
+{show && (
+  <span class="source-badge mono" title={`Source quality: ${quality}`} style="font-size:.65rem;margin-left:4px;padding:1px 5px;border-radius:4px;background:rgba(255,180,80,.15);color:var(--muted)">
+    {quality}
+  </span>
+)}

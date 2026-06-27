@@ -2,7 +2,7 @@ name: Update provider data
 
 on:
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: '0 2 * * *'
   workflow_dispatch:
 
 permissions:
@@ -26,6 +26,9 @@ jobs:
 
       - name: Validate JSON
         run: python scripts/validate_json.py
+
+      - name: Data quality gate
+        run: python scripts/check_data_quality.py
 
       - name: Commit if changed
         run: |

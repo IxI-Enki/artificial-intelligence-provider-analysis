@@ -1,0 +1,80 @@
+---
+import DeploymentBadge from './DeploymentBadge.astro';
+import SourceBadge from './SourceBadge.astro';
+
+interface Provider {
+  id: string;
+  name: string;
+  logo?: string;
+  flagship_model?: string;
+  usp_en?: string;
+  deployment_type: 'api' | 'self_hosted' | 'both';
+  context_tokens?: number | null;
+  api_input_per_million?: number | null;
+  api_output_per_million?: number | null;
+  field_sources?: Record<string, { source_quality?: string }>;
+}
+
+interface Props {
+  providers: Provider[];
+}
+
+const { providers } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+function fmtNum(v: number | null | undefined): string {
+  if (v === null || v === undefined) return 'n/a';
+  return v.toLocaleString('en-US');
+}
+
+function fmtPrice(v: number | null | undefined): string {
+  if (v === null || v === undefined) return 'n/a';
+  return '$' + v.toFixed(2);
+}
+---
+
+<div class="grid grid-3 provider-grid" style="margin-top:16px">
+  {providers.map((p) => (
+    <div class="card reveal provider-card" data-provider-id={p.id}>
+      <div class="provider-card-head" style="display:flex;align-items:center;gap:10px">
+        {p.logo && (
+          <img
+            class="provider-logo"
+            src={base + p.logo.replace(/^showcase_kit\//, 'showcase_kit/')}
+            alt={`${p.name} logo`}
+            width="36"
+            height="36"
+            loading="lazy"
+          />
+        )}
+        <h3 style="margin:0">{p.name}</h3>
+      </div>
+      <p class="mono" style="font-size:.72rem;color:var(--muted);margin:4px 0 8px">{p.flagship_model ?? 'n/a'}</p>
+      <DeploymentBadge deploymentType={p.deployment_type} />
+      <dl class="provider-metrics mono" style="font-size:.75rem;margin-top:10px;display:grid;gap:4px">
+        <div>
+          <dt style="display:inline;color:var(--muted)">Context: </dt>
+          <dd style="display:inline;margin:0">
+            {fmtNum(p.context_tokens)}
+            <SourceBadge field="context_tokens" fieldSources={p.field_sources} />
+          </dd>
+        </div>
+        <div>
+          <dt style="display:inline;color:var(--muted)">Input/1M: </dt>
+          <dd style="display:inline;margin:0">
+            {fmtPrice(p.api_input_per_million)}
+            <SourceBadge field="api_input_per_million" fieldSources={p.field_sources} />
+          </dd>
+        </div>
+        <div>
+          <dt style="display:inline;color:var(--muted)">Output/1M: </dt>
+          <dd style="display:inline;margin:0">
+            {fmtPrice(p.api_output_per_million)}
+            <SourceBadge field="api_output_per_million" fieldSources={p.field_sources} />
+          </dd>
+        </div>
+      </dl>
+      {p.usp_en && <p style="font-size:.9rem;color:var(--muted);margin-top:8px">{p.usp_en}</p>}
+    </div>
+  ))}
+</div>

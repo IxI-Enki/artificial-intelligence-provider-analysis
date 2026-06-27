@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProviderGrid from '../components/ProviderGrid.astro';
+import ContextChart from '../components/charts/ContextChart.astro';
+import PricingChart from '../components/charts/PricingChart.astro';
+import FilterBar from '../islands/FilterBar.svelte';
+import SortControls from '../islands/SortControls.svelte';
+import providersData from '../lib/data/providers.json';
+import manifestData from '../lib/data/manifest.json';
+
+const providers = providersData.providers;
+const manifest = manifestData;
+---
+
+<Layout generatedAt={manifest.generated_at} staleWarning={manifest.stale_warning}>
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker">Reference dashboard · AI providers</p>
+      <h1>AI providers for developers &amp; RAG</h1>
+      <p class="lead">
+        Independent landscape view: context windows, API pricing, deployment type, and aggregator flags —
+        all data baked at build time from curated YAML + live merge pipeline.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <h2>Providers at a glance</h2>
+      <FilterBar client:load providers={providers} />
+      <SortControls client:load providers={providers} />
+      <ProviderGrid providers={providers} />
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="card">
+        <h2>Context length</h2>
+        <ContextChart providers={providers} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="card">
+        <h2>API pricing (USD / 1M tokens)</h2>
+        <PricingChart providers={providers} />
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  @media (max-width: 640px) {
+    .provider-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .provider-metrics {
+      font-size: 0.7rem !important;
+    }
+  }
+</style>
