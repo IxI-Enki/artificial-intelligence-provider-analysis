@@ -34,16 +34,16 @@
 
 <div class="sort-controls card" style="padding:12px 16px;margin-bottom:12px">
   <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:end">
-    <label>
+    <label for="provider-sort-key">
       <span class="mono" style="font-size:.7rem;display:block;margin-bottom:4px">Sort by</span>
-      <select bind:value={sortKey} style="padding:6px 8px;border-radius:6px">
+      <select id="provider-sort-key" name="sort_key" bind:value={sortKey} style="padding:6px 8px;border-radius:6px">
         <option value="context">Context window</option>
         <option value="price">Input price</option>
       </select>
     </label>
-    <label>
+    <label for="provider-sort-direction">
       <span class="mono" style="font-size:.7rem;display:block;margin-bottom:4px">Direction</span>
-      <select bind:value={direction} style="padding:6px 8px;border-radius:6px">
+      <select id="provider-sort-direction" name="sort_direction" bind:value={direction} style="padding:6px 8px;border-radius:6px">
         <option value="desc">High to low</option>
         <option value="asc">Low to high</option>
       </select>

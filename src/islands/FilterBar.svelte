@@ -40,18 +40,18 @@
 
 <div class="filter-bar card" style="padding:12px 16px;margin-bottom:12px">
   <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:end">
-    <label>
+    <label for="provider-filter-deployment">
       <span class="mono" style="font-size:.7rem;display:block;margin-bottom:4px">Deployment</span>
-      <select bind:value={deploymentFilter} style="padding:6px 8px;border-radius:6px">
+      <select id="provider-filter-deployment" name="deployment" bind:value={deploymentFilter} style="padding:6px 8px;border-radius:6px">
         <option value="">All</option>
         <option value="api">API</option>
         <option value="self_hosted">Self-hosted</option>
         <option value="both">Both</option>
       </select>
     </label>
-    <label>
+    <label for="provider-filter-category">
       <span class="mono" style="font-size:.7rem;display:block;margin-bottom:4px">Category</span>
-      <select bind:value={categoryFilter} style="padding:6px 8px;border-radius:6px">
+      <select id="provider-filter-category" name="category" bind:value={categoryFilter} style="padding:6px 8px;border-radius:6px">
         <option value="">All</option>
         <option value="chat">Chat</option>
         <option value="embedding">Embedding</option>
