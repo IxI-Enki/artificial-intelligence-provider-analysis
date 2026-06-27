@@ -27,12 +27,12 @@ const base = import.meta.env.BASE_URL;
       name="description"
       content="Reference comparison of leading AI providers: context, API pricing, deployment type, MCP compatibility."
     />
-    <link rel="stylesheet" href={base + 'pagefind/pagefind-ui.css'} />
   </head>
   <body class="neu">
     {staleWarning && (
       <div class="offline-banner" role="status">{staleWarning}</div>
     )}
+    <div id="client-stale-banner" class="offline-banner client-stale-banner" role="status" hidden></div>
 
     <div class="bg-layer" aria-hidden="true">
       <div class="bg-parallax bg-parallax--grid"><div class="bg-grid"></div></div>
@@ -80,6 +80,37 @@ const base = import.meta.env.BASE_URL;
       </div>
     </footer>
 
-    <script is:inline src={base + 'pagefind/pagefind.js'}></script>
+    <link href={base + 'pagefind/pagefind-ui.css'} rel="stylesheet" />
+    <script is:inline define:vars={{ base, generatedAt }}>
+      (function () {
+        const REFRESH_MS = 24 * 60 * 60 * 1000;
+        if (generatedAt) {
+          const age = Date.now() - Date.parse(generatedAt);
+          if (!Number.isNaN(age) && age > REFRESH_MS) {
+            const el = document.getElementById('client-stale-banner');
+            if (el) {
+              const hours = Math.floor(age / 3600000);
+              el.textContent =
+                'Snapshot is stale on load (' + hours + 'h old). Run the deploy workflow to refresh.';
+              el.hidden = false;
+            }
+          }
+        }
+        const bundle = base + 'pagefind/';
+        const s = document.createElement('script');
+        s.src = bundle + 'pagefind-ui.js';
+        s.onload = function () {
+          if (typeof PagefindUI !== 'undefined') {
+            new PagefindUI({
+              element: '#pagefind-search',
+              bundlePath: bundle,
+              showSubResults: true,
+              resetStyles: false,
+            });
+          }
+        };
+        document.body.appendChild(s);
+      })();
+    </script>
   </body>
 </html>
