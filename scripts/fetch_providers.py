@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Merge curated providers.yaml into providers.json with live OpenRouter pricing."""
+"""Merge curated providers.yaml into providers.json with live aggregator sources."""
 from __future__ import annotations
 
 import copy
@@ -19,9 +19,17 @@ OUT_FILE = ROOT / "data" / "providers.json"
 MANIFEST = ROOT / "data" / "manifest.json"
 
 OPENROUTER_MODELS_URL = "https://openrouter.ai/api/v1/models"
-USER_AGENT = "die-farm-provider-fetch/1.0 (+https://github.com/IxI-Enki/artificial-intelligence-provider-analysis)"
+LITELLM_PRICES_URL = (
+    "https://raw.githubusercontent.com/BerriAI/litellm/main/"
+    "model_prices_and_context_window.json"
+)
+HF_CONFIG_URL = "https://huggingface.co/api/models/{repo}/revision/main"
 
-# Provider id -> OpenRouter model slug (verified against /api/v1/models)
+USER_AGENT = (
+    "die-farm-provider-fetch/2.0 "
+    "(+https://github.com/IxI-Enki/artificial-intelligence-provider-analysis)"
+)
+
 PROVIDER_MODEL_MAP: dict[str, str] = {
     "google_gemini": "google/gemini-2.5-pro",
     "anthropic_claude": "anthropic/claude-opus-4.6",
@@ -32,31 +40,78 @@ PROVIDER_MODEL_MAP: dict[str, str] = {
     "perplexity": "perplexity/sonar-pro",
 }
 
-LIVE_FIELDS = ("context_tokens", "api_input_per_million", "api_output_per_million")
+# Alias slugs that map to canonical provider ids during deduplication
+PROVIDER_ALIASES: dict[str, str] = {
+    "google": "google_gemini",
+    "anthropic": "anthropic_claude",
+    "x-ai": "x_grok",
+    "meta-llama": "meta_llama",
+}
+
+HF_REPO_MAP: dict[str, str] = {
+    "meta_llama": "meta-llama/Llama-3.1-8B",
+    "mistral": "mistralai/Mistral-7B-v0.1",
+}
+
+COMMERCIAL_EMBEDDING_DIMS: dict[str, int] = {
+    "text-embedding-3-large": 3072,
+    "text-embedding-3-small": 1536,
+    "text-embedding-ada-002": 1536,
+}
+
+EMBEDDING_MODEL_SLUGS: dict[str, str] = {
+    "openai": "text-embedding-3-large",
+}
 
 
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def fetch_openrouter_models() -> tuple[dict[str, dict[str, Any]], str | None]:
-    """Fetch OpenRouter model catalog. Returns (slug -> model, error message)."""
+def http_get_json(url: str, *, timeout: int = 90) -> tuple[Any, str | None]:
     req = urllib.request.Request(
-        OPENROUTER_MODELS_URL,
+        url,
         headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
     )
     try:
-        with urllib.request.urlopen(req, timeout=90) as resp:
-            payload = json.loads(resp.read().decode("utf-8"))
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8")), None
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-        return {}, f"OpenRouter fetch failed: {exc}"
+        return None, str(exc)
 
-    models = payload.get("data")
+
+def fetch_openrouter_models() -> tuple[dict[str, dict[str, Any]], str | None]:
+    payload, err = http_get_json(OPENROUTER_MODELS_URL)
+    if err:
+        return {}, f"OpenRouter fetch failed: {err}"
+    models = payload.get("data") if isinstance(payload, dict) else None
     if not isinstance(models, list):
         return {}, "OpenRouter response missing data array"
-
     by_id = {m["id"]: m for m in models if isinstance(m, dict) and "id" in m}
     return by_id, None
+
+
+def fetch_litellm_prices() -> tuple[dict[str, dict[str, Any]], str | None]:
+    payload, err = http_get_json(LITELLM_PRICES_URL, timeout=120)
+    if err:
+        return {}, f"LiteLLM fetch failed: {err}"
+    if not isinstance(payload, dict):
+        return {}, "LiteLLM response not an object"
+    return payload, None
+
+
+def fetch_hf_hidden_size(repo: str) -> tuple[int | None, str | None]:
+    config_url = f"https://huggingface.co/{repo}/resolve/main/config.json"
+    config, err = http_get_json(config_url)
+    if err or not isinstance(config, dict):
+        return None, err or "invalid config.json"
+    hidden = config.get("hidden_size")
+    if hidden is None:
+        return None, "hidden_size not found"
+    try:
+        return int(hidden), None
+    except (TypeError, ValueError):
+        return None, "hidden_size not numeric"
 
 
 def per_million_usd(per_token: str | float | int | None) -> float | None:
@@ -72,18 +127,81 @@ def source_entry(
     value: Any,
     *,
     source: str,
+    source_quality: str,
     fetched_at: str,
-    model_slug: str,
+    model_slug: str | None = None,
 ) -> dict[str, Any]:
-    return {
+    entry: dict[str, Any] = {
         "value": value,
         "source": source,
-        "model_slug": model_slug,
+        "source_quality": source_quality,
         "fetched_at": fetched_at,
     }
+    if model_slug:
+        entry["model_slug"] = model_slug
+    return entry
 
 
-def merge_live_fields(
+def normalize_field_sources(provider: dict[str, Any]) -> None:
+    fs = provider.get("field_sources") or {}
+    for entry in fs.values():
+        if not isinstance(entry, dict) or "source_quality" in entry:
+            continue
+        src = entry.get("source", "")
+        if src in ("openrouter", "litellm"):
+            entry["source_quality"] = "aggregator"
+        elif src == "huggingface":
+            entry["source_quality"] = "primary"
+        elif src == "static_map":
+            entry["source_quality"] = "inferred"
+        else:
+            entry["source_quality"] = "curated"
+
+
+def normalize_deployment_type(provider: dict[str, Any]) -> None:
+    raw = provider.get("deployment_type")
+    modes = provider.get("deployment_modes") or []
+    if raw in ("api", "self_hosted", "both"):
+        return
+    if "api" in modes and "self_hosted" in modes:
+        provider["deployment_type"] = "both"
+    elif "self_hosted" in modes:
+        provider["deployment_type"] = "self_hosted"
+    else:
+        provider["deployment_type"] = "api"
+
+
+def deduplicate_providers(providers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Merge alias rows into canonical provider entries."""
+    by_id: dict[str, dict[str, Any]] = {}
+    order: list[str] = []
+
+    for provider in providers:
+        pid = provider.get("id", "")
+        canonical = PROVIDER_ALIASES.get(pid, pid)
+        provider = copy.deepcopy(provider)
+        provider["id"] = canonical
+
+        if canonical not in by_id:
+            by_id[canonical] = provider
+            order.append(canonical)
+            continue
+
+        existing = by_id[canonical]
+        for key, value in provider.items():
+            if key == "field_sources":
+                fs = existing.setdefault("field_sources", {})
+                for fk, fv in (value or {}).items():
+                    if fk not in fs:
+                        fs[fk] = fv
+                continue
+            if existing.get(key) in (None, "", []) and value not in (None, "", []):
+                existing[key] = value
+
+    return [by_id[i] for i in order]
+
+
+def merge_openrouter_fields(
     provider: dict[str, Any],
     model: dict[str, Any],
     *,
@@ -91,101 +209,152 @@ def merge_live_fields(
     fetched_at: str,
 ) -> None:
     pricing = model.get("pricing") or {}
-    live_values: dict[str, Any] = {}
+    field_sources = provider.setdefault("field_sources", {})
 
     context = model.get("context_length")
     if context is not None:
         try:
-            live_values["context_tokens"] = int(context)
+            val = int(context)
+            provider["context_tokens"] = val
+            field_sources["context_tokens"] = source_entry(
+                val,
+                source="openrouter",
+                source_quality="aggregator",
+                fetched_at=fetched_at,
+                model_slug=model_slug,
+            )
         except (TypeError, ValueError):
             pass
 
-    inp = per_million_usd(pricing.get("prompt"))
-    if inp is not None:
-        live_values["api_input_per_million"] = inp
+    for key, token_key in (
+        ("api_input_per_million", "prompt"),
+        ("api_output_per_million", "completion"),
+    ):
+        val = per_million_usd(pricing.get(token_key))
+        if val is not None:
+            provider[key] = val
+            field_sources[key] = source_entry(
+                val,
+                source="openrouter",
+                source_quality="aggregator",
+                fetched_at=fetched_at,
+                model_slug=model_slug,
+            )
 
-    out = per_million_usd(pricing.get("completion"))
-    if out is not None:
-        live_values["api_output_per_million"] = out
 
-    if not live_values:
+def merge_litellm_fields(
+    provider: dict[str, Any],
+    litellm: dict[str, dict[str, Any]],
+    *,
+    model_slug: str,
+    fetched_at: str,
+) -> None:
+    model = litellm.get(model_slug)
+    if not isinstance(model, dict):
+        return
+    field_sources = provider.setdefault("field_sources", {})
+
+    ctx = model.get("max_tokens") or model.get("max_input_tokens")
+    if ctx is not None and "context_tokens" not in field_sources:
+        try:
+            val = int(ctx)
+            provider["context_tokens"] = val
+            field_sources["context_tokens"] = source_entry(
+                val,
+                source="litellm",
+                source_quality="aggregator",
+                fetched_at=fetched_at,
+                model_slug=model_slug,
+            )
+        except (TypeError, ValueError):
+            pass
+
+    for key, litellm_key in (
+        ("api_input_per_million", "input_cost_per_token"),
+        ("api_output_per_million", "output_cost_per_token"),
+    ):
+        if key in field_sources:
+            continue
+        val = per_million_usd(model.get(litellm_key))
+        if val is not None:
+            provider[key] = val
+            field_sources[key] = source_entry(
+                val,
+                source="litellm",
+                source_quality="aggregator",
+                fetched_at=fetched_at,
+                model_slug=model_slug,
+            )
+
+
+def merge_embedding_dimensions(
+    provider: dict[str, Any],
+    *,
+    fetched_at: str,
+    hf_dims: dict[str, int | None],
+) -> None:
+    pid = provider.get("id", "")
+    field_sources = provider.setdefault("field_sources", {})
+    if "embedding_dimensions" in field_sources:
         return
 
-    field_sources = provider.setdefault("field_sources", {})
-    for key, value in live_values.items():
-        provider[key] = value
-        field_sources[key] = source_entry(
-            value,
-            source="openrouter",
+    hf_val = hf_dims.get(pid)
+    if hf_val is not None:
+        provider["embedding_dimensions"] = hf_val
+        field_sources["embedding_dimensions"] = source_entry(
+            hf_val,
+            source="huggingface",
+            source_quality="primary",
             fetched_at=fetched_at,
-            model_slug=model_slug,
+        )
+        return
+
+    slug = EMBEDDING_MODEL_SLUGS.get(pid)
+    if slug and slug in COMMERCIAL_EMBEDDING_DIMS:
+        val = COMMERCIAL_EMBEDDING_DIMS[slug]
+        provider["embedding_dimensions"] = val
+        field_sources["embedding_dimensions"] = source_entry(
+            val,
+            source="static_map",
+            source_quality="inferred",
+            fetched_at=fetched_at,
+            model_slug=slug,
         )
 
 
-def apply_live_data(
-    providers: list[dict[str, Any]],
-    models_by_id: dict[str, dict[str, Any]],
-    fetched_at: str,
-) -> tuple[int, list[str]]:
-    matched = 0
-    missing: list[str] = []
-
-    for provider in providers:
-        pid = provider.get("id", "")
-        slug = PROVIDER_MODEL_MAP.get(pid)
-        if not slug:
-            continue
-        model = models_by_id.get(slug)
-        if not model:
-            missing.append(slug)
-            continue
-        merge_live_fields(provider, model, model_slug=slug, fetched_at=fetched_at)
-        matched += 1
-
-    return matched, missing
+def load_previous_outputs() -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    prev_providers = prev_manifest = None
+    if OUT_FILE.exists():
+        try:
+            prev_providers = json.loads(OUT_FILE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            pass
+    if MANIFEST.exists():
+        try:
+            prev_manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            pass
+    return prev_providers, prev_manifest
 
 
 def build_manifest(
     *,
     generated_at: str,
     schema_version: Any,
-    live_ok: bool,
-    live_fetched_at: str | None,
+    fetch_status: dict[str, Any],
+    stale_warning: str | None,
     models_matched: int,
-    models_missing: list[str],
-    fetch_error: str | None,
 ) -> dict[str, Any]:
-    live_fetch: dict[str, Any] = {
-        "source": "openrouter",
-        "url": OPENROUTER_MODELS_URL,
-        "ok": live_ok,
-        "fetched_at": live_fetched_at,
-        "models_matched": models_matched,
-        "models_missing": models_missing,
-    }
-    if fetch_error:
-        live_fetch["error"] = fetch_error
-
-    stale_warning: str | None = None
-    if not live_ok:
-        stale_warning = (
-            "Live pricing/context fetch failed; charts use last curated YAML values."
-        )
-
     manifest: dict[str, Any] = {
         "schema_version": schema_version,
         "generated_at": generated_at,
-        "source": "curated_yaml+openrouter" if live_ok and models_matched else "curated_yaml",
-        "live_fetch": live_fetch,
+        "source": "curated_yaml+live_merge",
+        "live_fetch": fetch_status,
         "files": ["providers.json"],
         "changelog": [
             {
                 "at": generated_at,
-                "note": (
-                    f"Merged providers.yaml + OpenRouter ({models_matched} models)"
-                    if live_ok and models_matched
-                    else "Merged providers.yaml (live fetch skipped or partial)"
-                ),
+                "note": f"Merged providers.yaml + live sources ({models_matched} OpenRouter models)",
             }
         ],
     }
@@ -196,7 +365,8 @@ def build_manifest(
         try:
             old = json.loads(MANIFEST.read_text(encoding="utf-8"))
             for entry in old.get("changelog", [])[:4]:
-                manifest["changelog"].append(entry)
+                if entry not in manifest["changelog"]:
+                    manifest["changelog"].append(entry)
         except json.JSONDecodeError:
             pass
 
@@ -208,40 +378,114 @@ def main() -> int:
         print(f"[ERROR] Missing {YAML_FILE}", file=sys.stderr)
         return 1
 
+    prev_providers, prev_manifest = load_previous_outputs()
     raw = yaml.safe_load(YAML_FILE.read_text(encoding="utf-8"))
-    generated_at = utc_now_iso()
+    fetched_at = utc_now_iso()
 
-    providers = copy.deepcopy(raw.get("providers", []))
-    models_by_id, fetch_error = fetch_openrouter_models()
-    live_fetched_at = generated_at if not fetch_error else None
-    live_ok = fetch_error is None and bool(models_by_id)
+    providers = deduplicate_providers(copy.deepcopy(raw.get("providers", [])))
+    for p in providers:
+        normalize_deployment_type(p)
+        if not p.get("model_category"):
+            p["model_category"] = "chat"
 
+    errors: list[str] = []
+    models_by_id, or_err = fetch_openrouter_models()
+
+    litellm, ll_err = fetch_litellm_prices()
+    optional_errors: list[str] = []
+    if ll_err:
+        optional_errors.append(ll_err)
+
+    hf_dims: dict[str, int | None] = {}
+    for pid, repo in HF_REPO_MAP.items():
+        dim, hf_err = fetch_hf_hidden_size(repo)
+        hf_dims[pid] = dim
+        if hf_err:
+            optional_errors.append(f"HF Hub {repo}: {hf_err}")
+
+    openrouter_ok = or_err is None and bool(models_by_id)
+    if or_err:
+        errors.append(or_err)
+
+    live_ok = openrouter_ok
     models_matched = 0
     models_missing: list[str] = []
+
     if live_ok:
-        models_matched, models_missing = apply_live_data(
-            providers, models_by_id, generated_at
-        )
+        for provider in providers:
+            pid = provider.get("id", "")
+            slug = PROVIDER_MODEL_MAP.get(pid)
+            if slug and models_by_id:
+                model = models_by_id.get(slug)
+                if model:
+                    merge_openrouter_fields(
+                        provider, model, model_slug=slug, fetched_at=fetched_at
+                    )
+                    models_matched += 1
+                else:
+                    models_missing.append(slug)
+            if slug and litellm:
+                merge_litellm_fields(
+                    provider, litellm, model_slug=slug, fetched_at=fetched_at
+                )
+            merge_embedding_dimensions(provider, fetched_at=fetched_at, hf_dims=hf_dims)
+
         if models_missing:
             print(
                 f"[WARN] OpenRouter slugs not found: {', '.join(models_missing)}",
                 file=sys.stderr,
             )
     else:
-        print(f"[WARN] {fetch_error}", file=sys.stderr)
+        for err in errors:
+            print(f"[WARN] {err}", file=sys.stderr)
+
+        if prev_providers:
+            print("[WARN] Live fetch failed — keeping previous providers.json", file=sys.stderr)
+            prev_list = prev_providers.get("providers", [])
+            prev_by_id = {p["id"]: p for p in prev_list if isinstance(p, dict) and "id" in p}
+            for provider in providers:
+                old = prev_by_id.get(provider.get("id", ""))
+                if old:
+                    for key in (
+                        "context_tokens",
+                        "api_input_per_million",
+                        "api_output_per_million",
+                        "embedding_dimensions",
+                        "field_sources",
+                    ):
+                        if key in old:
+                            provider[key] = copy.deepcopy(old[key])
+        else:
+            print("[WARN] No previous providers.json — using curated YAML only", file=sys.stderr)
+
+    stale_warning: str | None = None
+    if errors:
+        stale_warning = (
+            "Live pricing/context fetch failed; site uses last committed snapshot. "
+            + "; ".join(errors[:3])
+        )
+    elif optional_errors:
+        stale_warning = "Optional enrichments partial: " + "; ".join(optional_errors[:2])
+
+    for provider in providers:
+        normalize_field_sources(provider)
+
+    generated_at = fetched_at if live_ok else (
+        (prev_manifest or {}).get("generated_at")
+        or (prev_providers or {}).get("generated_at")
+        or fetched_at
+    )
 
     payload: dict[str, Any] = {
         "schema_version": raw.get("schema_version", 1),
         "generated_at": generated_at,
         "verified_at": raw.get("verified_at"),
         "mcp_last_reviewed": raw.get("mcp_last_reviewed"),
-        "source": "curated_yaml+openrouter" if live_ok and models_matched else "curated_yaml",
+        "source": "curated_yaml+live_merge" if live_ok else "curated_yaml",
         "live_fetch": {
-            "source": "openrouter",
-            "ok": live_ok and models_matched > 0,
-            "fetched_at": live_fetched_at,
-            "models_matched": models_matched,
-            "model_map": PROVIDER_MODEL_MAP,
+            "openrouter": {"ok": or_err is None, "models_matched": models_matched},
+            "litellm": {"ok": ll_err is None},
+            "huggingface": {"ok": all(v is not None for v in hf_dims.values()) if hf_dims else False},
         },
         "providers": providers,
         "mcp_clients": raw.get("mcp_clients", []),
@@ -252,14 +496,21 @@ def main() -> int:
         json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
 
+    fetch_status = {
+        "sources": payload["live_fetch"],
+        "ok": live_ok,
+        "fetched_at": fetched_at if live_ok else None,
+        "models_matched": models_matched,
+        "models_missing": models_missing,
+        "errors": errors,
+    }
+
     manifest = build_manifest(
         generated_at=generated_at,
         schema_version=payload["schema_version"],
-        live_ok=live_ok and models_matched > 0,
-        live_fetched_at=live_fetched_at,
+        fetch_status=fetch_status,
+        stale_warning=stale_warning,
         models_matched=models_matched,
-        models_missing=models_missing,
-        fetch_error=fetch_error,
     )
     MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 

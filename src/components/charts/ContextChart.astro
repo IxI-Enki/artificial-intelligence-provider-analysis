@@ -1,0 +1,46 @@
+---
+interface Provider {
+  name: string;
+  context_tokens?: number | null;
+}
+
+interface Props {
+  providers: Provider[];
+  chartId?: string;
+}
+
+const { providers, chartId = 'context-chart' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const sorted = [...providers].sort(
+  (a, b) => (b.context_tokens ?? 0) - (a.context_tokens ?? 0),
+);
+const labels = JSON.stringify(sorted.map((p) => p.name));
+const values = JSON.stringify(sorted.map((p) => p.context_tokens ?? null));
+---
+
+<div class="chart-wrap chart-wrap--tall">
+  <canvas id={chartId} data-labels={labels} data-values={values}></canvas>
+</div>
+<script is:inline src={base + 'vendor/chart.umd.min.js'}></script>
+<script define:vars={{ chartId }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById(chartId);
+    if (!canvas || typeof Chart === 'undefined') return;
+    const labels = JSON.parse(canvas.dataset.labels || '[]');
+    const values = JSON.parse(canvas.dataset.values || '[]');
+    new Chart(canvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{ label: 'Context tokens', data: values, backgroundColor: '#6ea8fe' }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { x: { type: 'logarithmic' } },
+        plugins: { legend: { display: false } },
+      },
+    });
+  });
+</script>

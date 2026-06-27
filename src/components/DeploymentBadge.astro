@@ -1,0 +1,21 @@
+---
+interface Props {
+  deploymentType: 'api' | 'self_hosted' | 'both';
+}
+
+const { deploymentType } = Astro.props;
+const badges: Array<{ label: string; cls: string }> = [];
+
+if (deploymentType === 'api' || deploymentType === 'both') {
+  badges.push({ label: 'API', cls: 'badge-api' });
+}
+if (deploymentType === 'self_hosted' || deploymentType === 'both') {
+  badges.push({ label: 'Self-hosted', cls: 'badge-self' });
+}
+---
+
+<span class="deployment-badges" style="display:inline-flex;gap:4px;flex-wrap:wrap">
+  {badges.map((b) => (
+    <span class={`mono ${b.cls}`} style="font-size:.65rem;padding:2px 6px;border-radius:4px;border:1px solid var(--border,#444)">{b.label}</span>
+  ))}
+</span>

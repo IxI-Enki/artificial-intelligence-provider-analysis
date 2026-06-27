@@ -1,44 +1,53 @@
 # Data strategy — AI Provider Landscape
 
-Three tiers keep the dashboard useful without pretending everything can be automated.
+Four tiers keep the dashboard useful without pretending everything can be automated.
 
 ## Tier 1 — Live (automated)
 
-**Fields:** `context_tokens`, `api_input_per_million`, `api_output_per_million`
+**Fields:** `context_tokens`, `api_input_per_million`, `api_output_per_million`, `embedding_dimensions`
 
-**Source:** [OpenRouter `/api/v1/models`](https://openrouter.ai/api/v1/models) (no API key for the public catalog).
+**Sources:**
 
-**Flow:** `scripts/fetch_providers.py` maps each curated provider id to an OpenRouter model slug, fetches pricing/context, and overwrites YAML defaults when the fetch succeeds. Each merged field gets a `field_sources` entry (`source`, `model_slug`, `fetched_at`).
+| Source | Role | `source_quality` |
+|--------|------|------------------|
+| [OpenRouter `/api/v1/models`](https://openrouter.ai/api/v1/models) | Primary pricing/context overlay | `aggregator` |
+| [LiteLLM `model_prices_and_context_window.json`](https://github.com/BerriAI/litellm) | Cross-check when OpenRouter field missing | `aggregator` |
+| [Hugging Face Hub `config.json`](https://huggingface.co/docs/hub/en/models) (`hidden_size`) | Open-source embedding dimensions | `primary` |
+| `COMMERCIAL_EMBEDDING_DIMS` static map in `fetch_providers.py` | Commercial embedding models without public config | `inferred` |
 
-**Cadence:** Weekly GitHub Actions workflow (Mon 06:00 UTC) plus manual `workflow_dispatch`.
+**Flow:** `scripts/fetch_providers.py` merges curated YAML with live sources. Each merged field gets a `field_sources` entry (`source`, `source_quality`, `model_slug`, `fetched_at`).
 
-**Failure mode:** YAML values are kept; `manifest.json` sets `stale_warning` when live fetch fails.
+**Cadence:** Daily GitHub Actions workflow (02:00 UTC) plus manual `workflow_dispatch`.
+
+**Failure mode:** On OpenRouter outage, previous `providers.json` is preserved; `manifest.json` sets `stale_warning` and keeps `generated_at` unchanged (SC-003).
 
 ## Tier 2 — Curated (manual review)
 
-**Fields:** privacy/compliance columns, MCP client matrix, pros/cons, enterprise notes, USPs.
+**Fields:** privacy/compliance columns, MCP client matrix, pros/cons, enterprise notes, USPs, `deployment_type`, `model_category`.
 
 **Source:** `data/providers.yaml` edited by hand with `verified_at` (privacy) and `mcp_last_reviewed` (MCP section).
 
-**Cadence:** Review when providers ship policy changes or MCP specs move (target: quarterly, or after major vendor announcements).
+**Cadence:** Review when providers ship policy changes or MCP specs move (target: quarterly).
 
-**Why not automated:** Training defaults, zero-retention claims, and GDPR posture depend on contract tier and legal wording — not on a stable public API. MCP support changes faster than any single feed tracks reliably.
+## Tier 3 — Build-time only (JAMstack)
 
-## Tier 3 — Future (optional)
+Astro reads `src/lib/data/*.json` copied from `data/` at `npm run prebuild`. The published site makes **zero** third-party network calls for model/pricing data (Constitution III).
 
-Ideas if we extend the dashboard later:
+## Tier 4 — Quality gates
 
-- **Artificial Analysis** — benchmark scores and quality rankings (scraping or licensed API; check ToS).
-- **Provider changelogs / RSS** — flagship model renames (e.g. Grok 3 → 4.x) surfaced as changelog entries.
-- **LiteLLM `model_prices_and_context_window.json`** — fallback or cross-check if OpenRouter is down.
-- **models.dev** — secondary catalog if it stabilizes as a public API.
+| Script | Purpose |
+|--------|---------|
+| `scripts/validate_json.py` | JSON Schema gate before commit |
+| `scripts/check_data_quality.py` | SC-002: >= 90% `context_tokens` + `deployment_type` coverage |
+| `pytest tests/test_fetch_providers.py` | Fail-safe, dedup, merge unit tests |
+| `npm run verify:static` | No forbidden URLs in built HTML |
 
 ## Files
 
 | File | Role |
 |------|------|
 | `data/providers.yaml` | Human-edited source of truth for curated fields |
-| `scripts/fetch_providers.py` | YAML merge + OpenRouter live overlay |
+| `scripts/fetch_providers.py` | YAML merge + OpenRouter + LiteLLM + HF Hub overlay |
 | `data/providers.json` | Built artifact for the static site |
 | `data/manifest.json` | Build metadata, `live_fetch`, `stale_warning`, changelog |
 
@@ -54,4 +63,4 @@ Ideas if we extend the dashboard later:
 | `meta_llama` | Llama 4 Maverick | `meta-llama/llama-4-maverick` |
 | `perplexity` | Sonar Pro | `perplexity/sonar-pro` |
 
-OpenRouter aggregates reseller pricing; numbers may differ slightly from direct vendor list prices.
+OpenRouter and LiteLLM aggregate reseller pricing; numbers may differ slightly from direct vendor list prices.

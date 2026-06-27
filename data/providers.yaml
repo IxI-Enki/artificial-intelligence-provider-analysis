@@ -6,6 +6,8 @@ mcp_last_reviewed: "2026-02-15"
 providers:
   - id: google_gemini
     name: Google Gemini
+    deployment_type: api
+    model_category: chat
     logo: showcase_kit/img/logos/google_gemini.svg
     flagship_model: Gemini 2.5 Pro
     usp_en: Deep Google ecosystem integration and strong multimodal capabilities.
@@ -33,6 +35,8 @@ providers:
 
   - id: anthropic_claude
     name: Anthropic Claude
+    deployment_type: api
+    model_category: chat
     logo: showcase_kit/img/logos/anthropic.svg
     flagship_model: Claude Opus 4
     usp_en: Safety-first design with Constitutional AI.
@@ -57,6 +61,8 @@ providers:
 
   - id: openai
     name: OpenAI ChatGPT
+    deployment_type: api
+    model_category: chat
     logo: showcase_kit/img/logos/openai.svg
     flagship_model: GPT-4.1
     usp_en: Market leader with custom GPTs and broad tooling.
@@ -82,6 +88,8 @@ providers:
 
   - id: x_grok
     name: X Grok
+    deployment_type: api
+    model_category: chat
     logo: showcase_kit/img/logos/x_grok.svg
     flagship_model: Grok 3
     usp_en: Real-time X platform data integration.
@@ -105,6 +113,9 @@ providers:
 
   - id: mistral
     name: Mistral AI
+    deployment_type: both
+    deployment_modes: [api, self_hosted]
+    model_category: chat
     logo: showcase_kit/img/logos/mistral.svg
     flagship_model: Mistral Medium 3
     usp_en: European provider — privacy, open weights, efficiency.
@@ -128,6 +139,9 @@ providers:
 
   - id: meta_llama
     name: Meta Llama
+    deployment_type: both
+    deployment_modes: [api, self_hosted]
+    model_category: chat
     logo: showcase_kit/img/logos/meta.svg
     flagship_model: Llama 4 Maverick
     usp_en: Open weights with very large context windows.
@@ -152,6 +166,8 @@ providers:
 
   - id: perplexity
     name: Perplexity AI
+    deployment_type: api
+    model_category: chat
     logo: showcase_kit/img/logos/perplexity.svg
     flagship_model: Sonar Pro
     usp_en: Cited answers with verifiable sources.
