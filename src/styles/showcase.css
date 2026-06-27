@@ -43,11 +43,7 @@ body {
 }
 
 .bg-layer { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
-.bg-layer::before {
-  content: ''; position: absolute; inset: 0; z-index: 0;
-  background: url('../img/bg_soft.png') center / cover no-repeat;
-  opacity: .22;
-}
+/* bg_soft.png omitted — asset not in repo; grid + gradient blobs provide background */
 .bg-parallax { position: absolute; inset: 0; will-change: transform; }
 .bg-parallax--grid {
   z-index: 2; inset: auto; left: 0; right: 0;

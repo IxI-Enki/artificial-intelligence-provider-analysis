@@ -10,7 +10,8 @@
     "preview": "astro preview",
     "test:unit": "vitest run",
     "verify:static": "node scripts/verify-static.mjs",
-    "postbuild": "pagefind --site dist --output-path dist/pagefind"
+    "pagefind:index": "pagefind --site dist --output-path dist/pagefind && node scripts/copy_pagefind.mjs",
+    "postbuild": "npm run pagefind:index && npm run verify:static"
   },
   "dependencies": {
     "@astrojs/svelte": "^7.0.0",

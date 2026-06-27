@@ -5,11 +5,56 @@ import ContextChart from '../components/charts/ContextChart.astro';
 import PricingChart from '../components/charts/PricingChart.astro';
 import FilterBar from '../islands/FilterBar.svelte';
 import SortControls from '../islands/SortControls.svelte';
+import DataDebugPanel from '../components/DataDebugPanel.svelte';
 import providersData from '../lib/data/providers.json';
 import manifestData from '../lib/data/manifest.json';
 
 const providers = providersData.providers;
 const manifest = manifestData;
+const live = manifest.live_fetch?.sources ?? {};
+const wfDeploy =
+  'https://github.com/IxI-Enki/artificial-intelligence-provider-analysis/actions/workflows/deploy.yml';
+const wfData =
+  'https://github.com/IxI-Enki/artificial-intelligence-provider-analysis/actions/workflows/update_data.yml';
+const debugSources = [
+  {
+    id: 'openrouter',
+    label: 'OpenRouter pricing & context',
+    ok: live.openrouter?.ok ?? null,
+    detail: live.openrouter?.models_matched != null ? `${live.openrouter.models_matched} models` : undefined,
+    workflowUrl: wfDeploy,
+  },
+  {
+    id: 'litellm',
+    label: 'LiteLLM price cross-check',
+    ok: live.litellm?.ok ?? null,
+    workflowUrl: wfDeploy,
+  },
+  {
+    id: 'huggingface',
+    label: 'HF Hub embedding dimensions',
+    ok: live.huggingface?.ok ?? null,
+    workflowUrl: wfDeploy,
+  },
+  {
+    id: 'validate',
+    label: 'validate_json + data quality gate',
+    ok: manifest.live_fetch?.ok ?? null,
+    workflowUrl: wfDeploy,
+  },
+  {
+    id: 'deploy',
+    label: 'Full deploy pipeline (fetch + build + Pages)',
+    ok: null,
+    workflowUrl: wfDeploy,
+  },
+  {
+    id: 'data_only',
+    label: 'Data-only refresh (commit data/)',
+    ok: null,
+    workflowUrl: wfData,
+  },
+];
 ---
 
 <Layout generatedAt={manifest.generated_at} staleWarning={manifest.stale_warning}>
@@ -26,6 +71,12 @@ const manifest = manifestData;
 
   <section class="section-tight">
     <div class="wrap">
+      <DataDebugPanel
+        client:load
+        generatedAt={manifest.generated_at}
+        staleWarning={manifest.stale_warning}
+        sources={debugSources}
+      />
       <h2>Providers at a glance</h2>
       <FilterBar client:load providers={providers} />
       <SortControls client:load providers={providers} />
