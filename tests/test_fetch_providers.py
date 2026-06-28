@@ -119,9 +119,9 @@ def test_litellm_and_hf_merge_field_sources():
 
 def test_openrouter_miss_marks_missing_not_yaml_fallback(tmp_data):
     fake_or = {
-        "google/gemini-2.5-pro": {
+        "google/gemini-3.1-pro-preview": {
             "context_length": 1048576,
-            "pricing": {"prompt": "0.00000125", "completion": "0.00001"},
+            "pricing": {"prompt": "0.000002", "completion": "0.000012"},
         },
     }
 
@@ -139,7 +139,7 @@ def test_openrouter_miss_marks_missing_not_yaml_fallback(tmp_data):
     assert claude["api_input_per_million"] is None
     fs = claude["field_sources"]["context_tokens"]
     assert fs["source_quality"] == "missing"
-    assert fs["model_slug"] == "anthropic/claude-opus-4.6"
+    assert fs["model_slug"] == "anthropic/claude-opus-4.8"
 
 
 def test_commercial_embedding_dims_inferred_quality():
