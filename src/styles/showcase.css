@@ -172,6 +172,12 @@ table.data tr:last-child td { border-bottom: none; }
 .status-ok { color: var(--success); font-weight: 700; }
 .status-warn { color: var(--warning); font-weight: 700; }
 
+.chart-card { margin-top: 4px; }
+.chart-subtitle {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 4px 0 0;
+}
 .chart-wrap { position: relative; width: 100%; height: min(420px, 55vh); margin-top: 12px; }
 .chart-wrap--tall { height: min(520px, 65vh); }
 

@@ -1,6 +1,6 @@
 # Curated provider metadata — edit manually; fetch_providers.py merges into providers.json
 schema_version: 1
-verified_at: "2026-06-16"
+verified_at: "2026-06-28"
 mcp_last_reviewed: "2026-02-15"
 
 providers:
@@ -9,12 +9,9 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/google_gemini.svg
-    flagship_model: Gemini 2.5 Pro
+    flagship_model: Gemini 3.1 Pro
     usp_en: Deep Google ecosystem integration and strong multimodal capabilities.
     usp_de: Tiefe Google-Ökosystem-Integration und starke multimodale Fähigkeiten.
-    context_tokens: 200000
-    api_input_per_million: 1.25
-    api_output_per_million: 10.00
     training_default: "No (Business) / Yes (Consumer)"
     zero_data_retention: "[OK] Business tier"
     gdpr_focus: "[OK]"
@@ -38,12 +35,9 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/anthropic.svg
-    flagship_model: Claude Opus 4
+    flagship_model: Claude Opus 4.8
     usp_en: Safety-first design with Constitutional AI.
     usp_de: Safety-first Design mit Constitutional AI.
-    context_tokens: 200000
-    api_input_per_million: 15.00
-    api_output_per_million: 75.00
     training_default: "No (opt-in)"
     zero_data_retention: "[OK]"
     gdpr_focus: "[OK]"
@@ -64,12 +58,9 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/openai.svg
-    flagship_model: GPT-4.1
+    flagship_model: GPT-5.5 Pro
     usp_en: Market leader with custom GPTs and broad tooling.
     usp_de: Marktführer mit Custom GPTs und breitem Tooling.
-    context_tokens: 128000
-    api_input_per_million: 2.00
-    api_output_per_million: 8.00
     training_default: "No (Business) / Yes (Consumer)"
     zero_data_retention: "[OK] Enterprise"
     gdpr_focus: "[OK]"
@@ -91,12 +82,9 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/x_grok.svg
-    flagship_model: Grok 3
+    flagship_model: Grok 4.20
     usp_en: Real-time X platform data integration.
     usp_de: Echtzeit-Integration mit der X-Plattform.
-    context_tokens: 131072
-    api_input_per_million: 3.00
-    api_output_per_million: 15.00
     training_default: "Unclear / via OCI"
     zero_data_retention: "[OK] via OCI"
     gdpr_focus: "[WARN]"
@@ -117,12 +105,9 @@ providers:
     deployment_modes: [api, self_hosted]
     model_category: chat
     logo: showcase_kit/img/logos/mistral.svg
-    flagship_model: Mistral Medium 3
+    flagship_model: Mistral Large 3
     usp_en: European provider — privacy, open weights, efficiency.
     usp_de: Europäischer Anbieter — Datenschutz, Open Weights, Effizienz.
-    context_tokens: 128000
-    api_input_per_million: 0.40
-    api_output_per_million: 2.00
     training_default: "No"
     zero_data_retention: "[OK]"
     gdpr_focus: "[OK] EU focus"
@@ -146,9 +131,6 @@ providers:
     flagship_model: Llama 4 Maverick
     usp_en: Open weights with very large context windows.
     usp_de: Open Weights mit sehr großen Kontextfenstern.
-    context_tokens: 1000000
-    api_input_per_million: 0.24
-    api_output_per_million: 0.97
     training_default: "No (policy)"
     zero_data_retention: "[OK] via Bedrock"
     gdpr_focus: "[OK]"
@@ -169,12 +151,9 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/perplexity.svg
-    flagship_model: Sonar Pro
+    flagship_model: Sonar Reasoning Pro
     usp_en: Cited answers with verifiable sources.
     usp_de: Zitierte Antworten mit überprüfbaren Quellen.
-    context_tokens: 200000
-    api_input_per_million: 1.00
-    api_output_per_million: 1.00
     training_default: "No (Enterprise) / Yes (Consumer)"
     zero_data_retention: "[OK] Enterprise"
     gdpr_focus: "[WARN]"

@@ -117,6 +117,31 @@ def test_litellm_and_hf_merge_field_sources():
     assert fs["embedding_dimensions"]["source"] == "huggingface"
 
 
+def test_openrouter_miss_marks_missing_not_yaml_fallback(tmp_data):
+    fake_or = {
+        "google/gemini-2.5-pro": {
+            "context_length": 1048576,
+            "pricing": {"prompt": "0.00000125", "completion": "0.00001"},
+        },
+    }
+
+    with patch.object(fp, "fetch_openrouter_models", return_value=(fake_or, None)):
+        with patch.object(fp, "fetch_litellm_prices", return_value=({}, None)):
+            with patch.object(fp, "fetch_hf_hidden_size", return_value=(4096, None)):
+                assert fp.main() == 0
+
+    payload = json.loads((tmp_data / "data" / "providers.json").read_text(encoding="utf-8"))
+    google = next(p for p in payload["providers"] if p["id"] == "google_gemini")
+    assert google["context_tokens"] == 1048576
+
+    claude = next(p for p in payload["providers"] if p["id"] == "anthropic_claude")
+    assert claude["context_tokens"] is None
+    assert claude["api_input_per_million"] is None
+    fs = claude["field_sources"]["context_tokens"]
+    assert fs["source_quality"] == "missing"
+    assert fs["model_slug"] == "anthropic/claude-opus-4.6"
+
+
 def test_commercial_embedding_dims_inferred_quality():
     provider = {"id": "openai", "name": "OpenAI", "deployment_type": "api"}
     fp.merge_embedding_dimensions(

@@ -2,6 +2,11 @@
 import DeploymentBadge from './DeploymentBadge.astro';
 import SourceBadge from './SourceBadge.astro';
 
+interface FieldSource {
+  model_slug?: string;
+  source_quality?: string;
+}
+
 interface Provider {
   id: string;
   name: string;
@@ -12,7 +17,7 @@ interface Provider {
   context_tokens?: number | null;
   api_input_per_million?: number | null;
   api_output_per_million?: number | null;
-  field_sources?: Record<string, { source_quality?: string }>;
+  field_sources?: Record<string, FieldSource>;
 }
 
 interface Props {
@@ -30,6 +35,19 @@ function fmtNum(v: number | null | undefined): string {
 function fmtPrice(v: number | null | undefined): string {
   if (v === null || v === undefined) return 'n/a';
   return '$' + v.toFixed(2);
+}
+
+function modelSlug(p: Provider): string | undefined {
+  return (
+    p.field_sources?.context_tokens?.model_slug ??
+    p.field_sources?.api_input_per_million?.model_slug
+  );
+}
+
+function showSlug(p: Provider): boolean {
+  const slug = modelSlug(p);
+  const display = p.flagship_model ?? '';
+  return Boolean(slug && slug !== display);
 }
 ---
 
@@ -49,7 +67,10 @@ function fmtPrice(v: number | null | undefined): string {
         )}
         <h3 style="margin:0">{p.name}</h3>
       </div>
-      <p class="mono" style="font-size:.72rem;color:var(--muted);margin:4px 0 8px">{p.flagship_model ?? 'n/a'}</p>
+      <p class="mono flagship-line">
+        {p.flagship_model ?? 'n/a'}
+        {showSlug(p) && <span class="flagship-slug">{modelSlug(p)}</span>}
+      </p>
       <DeploymentBadge deploymentType={p.deployment_type} />
       <dl class="provider-metrics mono" style="font-size:.75rem;margin-top:10px;display:grid;gap:4px">
         <div>
@@ -78,3 +99,18 @@ function fmtPrice(v: number | null | undefined): string {
     </div>
   ))}
 </div>
+
+<style>
+  .flagship-line {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin: 4px 0 8px;
+  }
+  .flagship-slug {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--muted);
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+</style>

@@ -11,11 +11,30 @@ interface Props {
 const { field, fieldSources = {} } = Astro.props;
 const src = fieldSources[field];
 const quality = src?.source_quality;
-const show = quality === 'aggregator' || quality === 'inferred';
+const show = quality === 'aggregator' || quality === 'inferred' || quality === 'missing';
+const isMissing = quality === 'missing';
 ---
 
 {show && (
-  <span class="source-badge mono" title={`Source quality: ${quality}`} style="font-size:.65rem;margin-left:4px;padding:1px 5px;border-radius:4px;background:rgba(255,180,80,.15);color:var(--muted)">
-    {quality}
+  <span
+    class:list={['source-badge', 'mono', { 'source-badge--missing': isMissing }]}
+    title={isMissing ? 'Live fetch found no matching model' : `Source quality: ${quality}`}
+  >
+    {isMissing ? 'MISSING' : quality}
   </span>
 )}
+
+<style>
+  .source-badge {
+    font-size: 0.65rem;
+    margin-left: 4px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(255, 180, 80, 0.15);
+    color: var(--muted);
+  }
+  .source-badge--missing {
+    background: rgba(179, 49, 48, 0.15);
+    color: var(--error);
+  }
+</style>

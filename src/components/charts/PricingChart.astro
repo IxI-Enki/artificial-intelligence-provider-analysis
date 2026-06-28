@@ -1,8 +1,13 @@
 ---
+interface FieldSource {
+  model_slug?: string;
+}
+
 interface Provider {
   flagship_model?: string;
   api_input_per_million?: number | null;
   api_output_per_million?: number | null;
+  field_sources?: Record<string, FieldSource>;
 }
 
 interface Props {
@@ -12,18 +17,35 @@ interface Props {
 
 const { providers, chartId = 'price-chart' } = Astro.props;
 const base = import.meta.env.BASE_URL;
-const labels = JSON.stringify(providers.map((p) => p.flagship_model ?? 'n/a'));
+
+function modelSlug(p: Provider): string | undefined {
+  return (
+    p.field_sources?.api_input_per_million?.model_slug ??
+    p.field_sources?.context_tokens?.model_slug
+  );
+}
+
+function barLabel(p: Provider): string {
+  const display = p.flagship_model ?? 'n/a';
+  const slug = modelSlug(p);
+  return slug ? `${display}\n${slug}` : display;
+}
+
+const labels = JSON.stringify(providers.map(barLabel));
 const inputData = JSON.stringify(providers.map((p) => p.api_input_per_million ?? null));
 const outputData = JSON.stringify(providers.map((p) => p.api_output_per_million ?? null));
 ---
 
-<div class="chart-wrap">
-  <canvas
-    id={chartId}
-    data-labels={labels}
-    data-input={inputData}
-    data-output={outputData}
-  ></canvas>
+<div class="chart-card">
+  <p class="chart-subtitle">Aggregator pricing via OpenRouter</p>
+  <div class="chart-wrap">
+    <canvas
+      id={chartId}
+      data-labels={labels}
+      data-input={inputData}
+      data-output={outputData}
+    ></canvas>
+  </div>
 </div>
 <script is:inline src={base + 'vendor/chart.umd.min.js'}></script>
 <script define:vars={{ chartId }}>
@@ -45,7 +67,19 @@ const outputData = JSON.stringify(providers.map((p) => p.api_output_per_million 
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        scales: { y: { beginAtZero: true } },
+        scales: {
+          x: {
+            ticks: {
+              font: (ctx) => {
+                const label = labels[ctx.index] ?? '';
+                return { size: String(label).includes('\n') ? 10 : 11 };
+              },
+              maxRotation: 0,
+              autoSkip: false,
+            },
+          },
+          y: { beginAtZero: true },
+        },
       },
     });
   });

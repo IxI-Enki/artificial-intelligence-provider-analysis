@@ -31,13 +31,13 @@ USER_AGENT = (
 )
 
 PROVIDER_MODEL_MAP: dict[str, str] = {
-    "google_gemini": "google/gemini-2.5-pro",
-    "anthropic_claude": "anthropic/claude-opus-4.6",
-    "openai": "openai/gpt-4.1",
+    "google_gemini": "google/gemini-3.1-pro-preview",
+    "anthropic_claude": "anthropic/claude-opus-4.8",
+    "openai": "openai/gpt-5.5-pro",
     "x_grok": "x-ai/grok-4.20",
-    "mistral": "mistralai/mistral-medium-3",
+    "mistral": "mistralai/mistral-large-2512",
     "meta_llama": "meta-llama/llama-4-maverick",
-    "perplexity": "perplexity/sonar-pro",
+    "perplexity": "perplexity/sonar-reasoning-pro",
 }
 
 # Alias slugs that map to canonical provider ids during deduplication
@@ -62,6 +62,13 @@ COMMERCIAL_EMBEDDING_DIMS: dict[str, int] = {
 EMBEDDING_MODEL_SLUGS: dict[str, str] = {
     "openai": "text-embedding-3-large",
 }
+
+# Populated only by live fetch — never keep stale YAML fallbacks
+LIVE_ONLY_FIELDS = (
+    "context_tokens",
+    "api_input_per_million",
+    "api_output_per_million",
+)
 
 
 def utc_now_iso() -> str:
@@ -199,6 +206,36 @@ def deduplicate_providers(providers: list[dict[str, Any]]) -> list[dict[str, Any
                 existing[key] = value
 
     return [by_id[i] for i in order]
+
+
+def strip_live_only_fields(provider: dict[str, Any]) -> None:
+    """Remove curated pricing/context numbers — live merge is the sole source."""
+    for key in LIVE_ONLY_FIELDS:
+        provider.pop(key, None)
+        fs = provider.get("field_sources")
+        if isinstance(fs, dict):
+            fs.pop(key, None)
+
+
+def finalize_live_fields(
+    provider: dict[str, Any],
+    *,
+    model_slug: str | None,
+    fetched_at: str,
+) -> None:
+    """Mark pricing/context as missing when no aggregator supplied a value."""
+    field_sources = provider.setdefault("field_sources", {})
+    for key in LIVE_ONLY_FIELDS:
+        if key in field_sources:
+            continue
+        provider[key] = None
+        field_sources[key] = source_entry(
+            None,
+            source="openrouter",
+            source_quality="missing",
+            fetched_at=fetched_at,
+            model_slug=model_slug,
+        )
 
 
 def merge_openrouter_fields(
@@ -384,6 +421,7 @@ def main() -> int:
 
     providers = deduplicate_providers(copy.deepcopy(raw.get("providers", [])))
     for p in providers:
+        strip_live_only_fields(p)
         normalize_deployment_type(p)
         if not p.get("model_category"):
             p["model_category"] = "chat"
@@ -429,6 +467,11 @@ def main() -> int:
                     provider, litellm, model_slug=slug, fetched_at=fetched_at
                 )
             merge_embedding_dimensions(provider, fetched_at=fetched_at, hf_dims=hf_dims)
+            finalize_live_fields(
+                provider,
+                model_slug=PROVIDER_MODEL_MAP.get(pid),
+                fetched_at=fetched_at,
+            )
 
         if models_missing:
             print(

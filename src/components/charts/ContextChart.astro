@@ -1,7 +1,12 @@
 ---
+interface FieldSource {
+  model_slug?: string;
+}
+
 interface Provider {
   name: string;
   context_tokens?: number | null;
+  field_sources?: Record<string, FieldSource>;
 }
 
 interface Props {
@@ -14,12 +19,21 @@ const base = import.meta.env.BASE_URL;
 const sorted = [...providers].sort(
   (a, b) => (b.context_tokens ?? 0) - (a.context_tokens ?? 0),
 );
-const labels = JSON.stringify(sorted.map((p) => p.name));
+
+function barLabel(p: Provider): string {
+  const slug = p.field_sources?.context_tokens?.model_slug;
+  return slug ? `${p.name}\n${slug}` : p.name;
+}
+
+const labels = JSON.stringify(sorted.map(barLabel));
 const values = JSON.stringify(sorted.map((p) => p.context_tokens ?? null));
 ---
 
-<div class="chart-wrap chart-wrap--tall">
-  <canvas id={chartId} data-labels={labels} data-values={values}></canvas>
+<div class="chart-card">
+  <p class="chart-subtitle">Aggregator pricing via OpenRouter</p>
+  <div class="chart-wrap chart-wrap--tall">
+    <canvas id={chartId} data-labels={labels} data-values={values}></canvas>
+  </div>
 </div>
 <script is:inline src={base + 'vendor/chart.umd.min.js'}></script>
 <script define:vars={{ chartId }}>
@@ -38,7 +52,17 @@ const values = JSON.stringify(sorted.map((p) => p.context_tokens ?? null));
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
-        scales: { x: { type: 'logarithmic' } },
+        scales: {
+          x: { type: 'logarithmic' },
+          y: {
+            ticks: {
+              font: (ctx) => {
+                const label = labels[ctx.index] ?? '';
+                return { size: String(label).includes('\n') ? 10 : 11 };
+              },
+            },
+          },
+        },
         plugins: { legend: { display: false } },
       },
     });
