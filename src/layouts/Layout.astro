@@ -81,6 +81,23 @@ const base = import.meta.env.BASE_URL;
     </footer>
 
     <link href={base + 'pagefind/pagefind-ui.css'} rel="stylesheet" />
+    <script is:inline>
+      (function () {
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var elements = document.querySelectorAll('.reveal');
+        if (!elements.length) return;
+        if (reduced) {
+          elements.forEach(function (el) { el.classList.add('in'); });
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) e.target.classList.add('in');
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+        elements.forEach(function (el) { io.observe(el); });
+      })();
+    </script>
     <script is:inline define:vars={{ base, generatedAt }}>
       (function () {
         const REFRESH_MS = 24 * 60 * 60 * 1000;
