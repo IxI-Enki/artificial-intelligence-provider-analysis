@@ -1,4 +1,23 @@
-# AI Provider Landscape
+---
+title: AI Provider Landscape
+description: Reference comparison of leading AI providers for developers and RAG architecture — context windows, API pricing, deployment, MCP compatibility. Astro static site with daily data refresh.
+dates:
+  - created: 2026-06-26
+  - updated: 2026-07-01
+version: 1.0.0
+status: published
+author:
+  - name: Jan Ritt
+    email: janritt.office@gmail.com
+    location: Österreich
+    github:
+      handle: IxI-Enki
+      userpage: 'https://github.com/IxI-Enki'
+tags: [ ai-providers, dashboard, astro, jamstack, github-pages ]
+repo: IxI-Enki/artificial-intelligence-provider-analysis
+relates_to:
+  - docs/data_strategy.md
+---
 
 Reference comparison of leading **AI providers** for developers and RAG architecture: context windows, API pricing, deployment type, aggregator flags, MCP client compatibility.
 
@@ -35,6 +54,7 @@ pytest tests/test_fetch_providers.py
 
 npm ci
 npm run dev
+
 ```
 
 ## Production build
@@ -43,6 +63,7 @@ npm run dev
 npm run build          # syncs JSON, builds dist/, runs Pagefind index
 npm run verify:static  # asserts no forbidden runtime fetch URLs
 npm run test:unit
+
 ```
 
 ## Sister dashboard

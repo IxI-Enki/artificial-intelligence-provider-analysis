@@ -1,4 +1,23 @@
-# Data strategy — AI Provider Landscape
+---
+title: Data Strategy — AI Provider Landscape
+description: Four-tier data strategy — live automated fields, curated manual review, inferred enrichment, and static reference. OpenRouter, LiteLLM, Hugging Face sources.
+dates:
+  - created: 2026-06-26
+  - updated: 2026-07-01
+version: 1.0.0
+status: reference
+author:
+  - name: Jan Ritt
+    email: janritt.office@gmail.com
+    location: Österreich
+    github:
+      handle: IxI-Enki
+      userpage: 'https://github.com/IxI-Enki'
+tags: [ ai-providers, data-strategy, etl, openrouter, github-actions ]
+repo: IxI-Enki/artificial-intelligence-provider-analysis
+relates_to:
+  - ../README.md
+---
 
 Four tiers keep the dashboard useful without pretending everything can be automated.
 
@@ -6,7 +25,7 @@ Four tiers keep the dashboard useful without pretending everything can be automa
 
 **Fields:** `context_tokens`, `api_input_per_million`, `api_output_per_million`, `embedding_dimensions`
 
-**Sources:**
+Sources:
 
 | Source | Role | `source_quality` |
 |--------|------|------------------|
