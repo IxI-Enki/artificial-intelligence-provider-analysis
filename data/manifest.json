@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-03T05:42:35.997560+00:00",
+  "generated_at": "2026-07-04T05:36:42.513646+00:00",
   "source": "curated_yaml+live_merge",
   "live_fetch": {
     "sources": {
@@ -16,7 +16,7 @@
       }
     },
     "ok": true,
-    "fetched_at": "2026-07-03T05:42:35.997560+00:00",
+    "fetched_at": "2026-07-04T05:36:42.513646+00:00",
     "models_matched": 7,
     "models_missing": [],
     "errors": []
@@ -25,6 +25,10 @@
     "providers.json"
   ],
   "changelog": [
+    {
+      "at": "2026-07-04T05:36:42.513646+00:00",
+      "note": "Merged providers.yaml + live sources (7 OpenRouter models)"
+    },
     {
       "at": "2026-07-03T05:42:35.997560+00:00",
       "note": "Merged providers.yaml + live sources (7 OpenRouter models)"
@@ -39,10 +43,6 @@
     },
     {
       "at": "2026-06-30T06:01:22.105685+00:00",
-      "note": "Merged providers.yaml + live sources (7 OpenRouter models)"
-    },
-    {
-      "at": "2026-06-29T06:27:41.954945+00:00",
       "note": "Merged providers.yaml + live sources (7 OpenRouter models)"
     }
   ],
