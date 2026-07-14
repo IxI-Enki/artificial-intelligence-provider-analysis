@@ -141,7 +141,7 @@ def test_openrouter_miss_marks_missing_not_yaml_fallback(tmp_data):
     assert claude["api_input_per_million"] is None
     fs = claude["field_sources"]["context_tokens"]
     assert fs["source_quality"] == "missing"
-    assert fs["model_slug"] == "anthropic/claude-opus-4.6"
+    assert fs.get("model_slug") is None
 
 
 def test_resolve_model_slug_prefers_yaml_override():
@@ -153,10 +153,23 @@ def test_resolve_model_slug_prefers_yaml_override():
     assert fp.resolve_model_slug(provider, models) == "openai/gpt-4o"
 
 
-def test_resolve_model_slug_falls_back_to_preference_list():
+def test_resolve_model_slug_picks_newest_flagship():
+    models = {
+        "anthropic/claude-opus-4.6": {"context_length": 1_000_000, "created": 100},
+        "anthropic/claude-opus-4.8": {"context_length": 1_000_000, "created": 200},
+        "anthropic/claude-sonnet-5": {"context_length": 1_000_000, "created": 300},
+    }
+    provider = {"id": "anthropic_claude"}
+    assert fp.resolve_model_slug(provider, models) == "anthropic/claude-sonnet-5"
+
+
+def test_resolve_model_slug_picks_best_available():
     provider = {"id": "openai"}
-    models = {"openai/gpt-4.1": {"context_length": 1000, "name": "OpenAI: GPT-4.1"}}
-    assert fp.resolve_model_slug(provider, models) == "openai/gpt-4.1"
+    models = {
+        "openai/gpt-4.1": {"context_length": 1000, "created": 100, "name": "OpenAI: GPT-4.1"},
+        "openai/gpt-5.6-sol-pro": {"context_length": 2000, "created": 300, "name": "OpenAI: GPT-5.6 Sol Pro"},
+    }
+    assert fp.resolve_model_slug(provider, models) == "openai/gpt-5.6-sol-pro"
 
 
 def test_openrouter_display_name_strips_vendor_prefix():

@@ -9,7 +9,7 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/google_gemini.svg
-    flagship_model: Gemini 2.5 Pro
+    flagship_model: Gemini 3.1 Pro
     usp_en: Deep Google ecosystem integration and strong multimodal capabilities.
     usp_de: Tiefe Google-Ökosystem-Integration und starke multimodale Fähigkeiten.
     training_default: "No (Business) / Yes (Consumer)"
@@ -35,7 +35,7 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/anthropic.svg
-    flagship_model: Claude Opus 4.6
+    flagship_model: Claude Sonnet 5
     usp_en: Safety-first design with Constitutional AI.
     usp_de: Safety-first Design mit Constitutional AI.
     training_default: "No (opt-in)"
@@ -58,7 +58,7 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/openai.svg
-    flagship_model: GPT-4.1
+    flagship_model: GPT-5.6 Sol Pro
     usp_en: Market leader with custom GPTs and broad tooling.
     usp_de: Marktführer mit Custom GPTs und breitem Tooling.
     training_default: "No (Business) / Yes (Consumer)"
@@ -82,7 +82,7 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/x_grok.svg
-    flagship_model: Grok 4.20
+    flagship_model: Grok 4.5
     usp_en: Real-time X platform data integration.
     usp_de: Echtzeit-Integration mit der X-Plattform.
     training_default: "Unclear / via OCI"
@@ -105,7 +105,7 @@ providers:
     deployment_modes: [api, self_hosted]
     model_category: chat
     logo: showcase_kit/img/logos/mistral.svg
-    flagship_model: Mistral Large 3 2512
+    flagship_model: Mistral Medium 3.5
     usp_en: European provider — privacy, open weights, efficiency.
     usp_de: Europäischer Anbieter — Datenschutz, Open Weights, Effizienz.
     training_default: "No"
@@ -151,7 +151,7 @@ providers:
     deployment_type: api
     model_category: chat
     logo: showcase_kit/img/logos/perplexity.svg
-    flagship_model: Sonar Pro
+    flagship_model: Sonar Pro Search
     usp_en: Cited answers with verifiable sources.
     usp_de: Zitierte Antworten mit überprüfbaren Quellen.
     training_default: "No (Enterprise) / Yes (Consumer)"

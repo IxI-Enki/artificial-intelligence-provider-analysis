@@ -31,52 +31,21 @@ USER_AGENT = (
     "(+https://github.com/IxI-Enki/artificial-intelligence-provider-analysis)"
 )
 
-# Ordered slug preferences per provider — first match on OpenRouter wins.
-PROVIDER_SLUG_PREFERENCES: dict[str, list[str]] = {
-    "google_gemini": [
-        "google/gemini-2.5-pro",
-        "google/gemini-2.5-flash",
-        "google/gemini-3.1-pro-preview",
-    ],
-    "anthropic_claude": [
-        "anthropic/claude-opus-4.6",
-        "anthropic/claude-sonnet-4.5",
-        "anthropic/claude-opus-4.8",
-    ],
-    "openai": [
-        "openai/gpt-4.1",
-        "openai/gpt-4o",
-        "openai/gpt-5.4",
-    ],
-    "x_grok": [
-        "x-ai/grok-4.20",
-        "x-ai/grok-4.3",
-        "x-ai/grok-4.5",
-    ],
-    "mistral": [
-        "mistralai/mistral-large-2512",
-        "mistralai/mistral-medium-3-5",
-        "mistralai/mistral-large",
-    ],
-    "meta_llama": [
-        "meta-llama/llama-4-maverick",
-        "meta-llama/llama-3.3-70b-instruct",
-    ],
-    "perplexity": [
-        "perplexity/sonar-pro",
-        "perplexity/sonar-reasoning-pro",
-        "perplexity/sonar-pro-search",
-    ],
-}
-
-# Legacy alias — tests and docs refer to canonical first preference.
-PROVIDER_MODEL_MAP: dict[str, str] = {
-    pid: slugs[0] for pid, slugs in PROVIDER_SLUG_PREFERENCES.items()
+# OpenRouter vendor prefix per curated provider id.
+VENDOR_PREFIX: dict[str, str] = {
+    "google_gemini": "google/",
+    "anthropic_claude": "anthropic/",
+    "openai": "openai/",
+    "x_grok": "x-ai/",
+    "mistral": "mistralai/",
+    "meta_llama": "meta-llama/",
+    "perplexity": "perplexity/",
 }
 
 EXCLUDED_SLUG_RE = (
     r"(?:^|:)free\b|guard|embed|vision-instruct|codestral|devstral|"
-    r"ministral|lyria|nano\b|search-preview|build-"
+    r"ministral|lyria|nano\b|search-preview|build-|"
+    r"(?:-fast\b|multi-agent|image|customtools|voxtral|gemma|flash-lite)"
 )
 
 # Alias slugs that map to canonical provider ids during deduplication
@@ -287,40 +256,139 @@ def openrouter_display_name(model: dict[str, Any]) -> str | None:
     return raw.strip()
 
 
+def _slug_tail(slug: str) -> str:
+    return slug.split("/")[-1].lower()
+
+
+def _version_parts(slug: str) -> tuple[int, ...]:
+    nums = re.findall(r"(\d+)", _slug_tail(slug))
+    return tuple(int(n) for n in nums) if nums else (0,)
+
+
+def flagship_score(provider_id: str, slug: str, model: dict[str, Any]) -> tuple[int, int]:
+    """Higher = newer/more flagship. Sort key: (tier, openrouter created)."""
+    tail = _slug_tail(slug)
+    tier = 0
+
+    if provider_id == "anthropic_claude":
+        if "sonnet-5" in tail:
+            tier = 220
+        elif "opus-4.8" in tail:
+            tier = 215
+        elif "fable-5" in tail:
+            tier = 210
+        elif "opus-4.7" in tail:
+            tier = 200
+        elif "sonnet-4.6" in tail:
+            tier = 190
+        elif "opus-4.6" in tail:
+            tier = 185
+        elif "sonnet-4.5" in tail:
+            tier = 180
+        elif "opus-4.5" in tail:
+            tier = 175
+        elif "opus-4" in tail:
+            tier = 160
+        elif "sonnet-4" in tail:
+            tier = 150
+    elif provider_id == "openai":
+        if "gpt-5.6" in tail:
+            tier = 230
+        elif "gpt-5.5" in tail:
+            tier = 220
+        elif "gpt-5.4" in tail:
+            tier = 210
+        elif "gpt-5" in tail:
+            tier = 200
+        elif "gpt-4.1" in tail:
+            tier = 150
+        elif "gpt-4o" in tail:
+            tier = 140
+        if "-pro" in tail:
+            tier += 25
+        if "sol-pro" in tail:
+            tier += 12
+        elif "terra-pro" in tail:
+            tier += 10
+        elif "luna-pro" in tail:
+            tier += 8
+        elif re.search(r"gpt-5\.6-(sol|terra|luna)", tail):
+            tier += 5
+    elif provider_id == "google_gemini":
+        if "gemini-3.1-pro" in tail:
+            tier = 225
+        elif "gemini-3.5" in tail and "flash" in tail:
+            tier = 220
+        elif "gemini-3-flash" in tail:
+            tier = 200
+        elif "gemini-2.5-pro" in tail and "preview" not in tail:
+            tier = 180
+        elif "gemini-2.5-flash" in tail:
+            tier = 170
+    elif provider_id == "x_grok":
+        tier = 1
+    elif provider_id == "mistral":
+        if "mistral-medium-3-5" in tail:
+            tier = 220
+        elif "mistral-large-2512" in tail:
+            tier = 210
+        elif "mistral-large" in tail:
+            tier = 200
+        elif "mistral-medium" in tail:
+            tier = 180
+    elif provider_id == "meta_llama":
+        if "llama-4-maverick" in tail:
+            tier = 220
+        elif "llama-4-scout" in tail:
+            tier = 215
+        elif "llama-4" in tail:
+            tier = 200
+        elif "llama-3.3" in tail:
+            tier = 150
+    elif provider_id == "perplexity":
+        if "sonar-pro-search" in tail:
+            tier = 220
+        elif "sonar-pro" in tail:
+            tier = 210
+        elif "sonar-reasoning-pro" in tail:
+            tier = 200
+        elif "sonar-deep-research" in tail:
+            tier = 190
+        elif tail == "sonar":
+            tier = 150
+
+    created = model.get("created")
+    try:
+        created_val = int(created)
+    except (TypeError, ValueError):
+        created_val = 0
+    return tier, created_val
+
+
 def resolve_model_slug(
     provider: dict[str, Any],
     models_by_id: dict[str, dict[str, Any]],
 ) -> str | None:
-    """Pick OpenRouter slug: YAML override, then preference list, then auto-scan."""
+    """Pick newest flagship OpenRouter slug for this provider."""
     pid = provider.get("id", "")
     override = provider.get("openrouter_slug")
     if isinstance(override, str) and override in models_by_id:
         return override
 
-    for slug in PROVIDER_SLUG_PREFERENCES.get(pid, []):
-        if slug in models_by_id:
-            return slug
+    prefix = VENDOR_PREFIX.get(pid)
+    if not prefix:
+        return None
 
-    prefix = pid.split("_")[0] if "_" in pid else pid
-    alias_prefix = {
-        "google_gemini": "google",
-        "anthropic_claude": "anthropic",
-        "x_grok": "x-ai",
-        "meta_llama": "meta-llama",
-    }.get(pid, prefix.replace("_", "-"))
-
-    candidates: list[tuple[int, str]] = []
+    candidates: list[tuple[tuple[int, int], str]] = []
     for slug, model in models_by_id.items():
-        if not slug.startswith(f"{alias_prefix}/"):
+        if not slug.startswith(prefix):
             continue
         if re.search(EXCLUDED_SLUG_RE, slug, re.IGNORECASE):
             continue
-        ctx = model.get("context_length") or 0
-        try:
-            ctx_val = int(ctx)
-        except (TypeError, ValueError):
-            ctx_val = 0
-        candidates.append((ctx_val, slug))
+        score = flagship_score(pid, slug, model)
+        if score[0] <= 0:
+            continue
+        candidates.append((score, slug))
 
     if not candidates:
         return None
@@ -563,8 +631,8 @@ def main() -> int:
                     models_matched += 1
                 else:
                     models_missing.append(slug)
-            elif PROVIDER_SLUG_PREFERENCES.get(pid):
-                models_missing.append(PROVIDER_SLUG_PREFERENCES[pid][0])
+            elif slug is None and VENDOR_PREFIX.get(pid):
+                models_missing.append(f"{VENDOR_PREFIX[pid]}*")
             if slug and litellm:
                 merge_litellm_fields(
                     provider, litellm, model_slug=slug, fetched_at=fetched_at
@@ -572,7 +640,7 @@ def main() -> int:
             merge_embedding_dimensions(provider, fetched_at=fetched_at, hf_dims=hf_dims)
             finalize_live_fields(
                 provider,
-                model_slug=slug or PROVIDER_SLUG_PREFERENCES.get(pid, [None])[0],
+                model_slug=slug,
                 fetched_at=fetched_at,
             )
 
