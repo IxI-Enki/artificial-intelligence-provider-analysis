@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -30,15 +31,53 @@ USER_AGENT = (
     "(+https://github.com/IxI-Enki/artificial-intelligence-provider-analysis)"
 )
 
-PROVIDER_MODEL_MAP: dict[str, str] = {
-    "google_gemini": "google/gemini-3.1-pro-preview",
-    "anthropic_claude": "anthropic/claude-opus-4.8",
-    "openai": "openai/gpt-5.5-pro",
-    "x_grok": "x-ai/grok-4.20",
-    "mistral": "mistralai/mistral-large-2512",
-    "meta_llama": "meta-llama/llama-4-maverick",
-    "perplexity": "perplexity/sonar-reasoning-pro",
+# Ordered slug preferences per provider — first match on OpenRouter wins.
+PROVIDER_SLUG_PREFERENCES: dict[str, list[str]] = {
+    "google_gemini": [
+        "google/gemini-2.5-pro",
+        "google/gemini-2.5-flash",
+        "google/gemini-3.1-pro-preview",
+    ],
+    "anthropic_claude": [
+        "anthropic/claude-opus-4.6",
+        "anthropic/claude-sonnet-4.5",
+        "anthropic/claude-opus-4.8",
+    ],
+    "openai": [
+        "openai/gpt-4.1",
+        "openai/gpt-4o",
+        "openai/gpt-5.4",
+    ],
+    "x_grok": [
+        "x-ai/grok-4.20",
+        "x-ai/grok-4.3",
+        "x-ai/grok-4.5",
+    ],
+    "mistral": [
+        "mistralai/mistral-large-2512",
+        "mistralai/mistral-medium-3-5",
+        "mistralai/mistral-large",
+    ],
+    "meta_llama": [
+        "meta-llama/llama-4-maverick",
+        "meta-llama/llama-3.3-70b-instruct",
+    ],
+    "perplexity": [
+        "perplexity/sonar-pro",
+        "perplexity/sonar-reasoning-pro",
+        "perplexity/sonar-pro-search",
+    ],
 }
+
+# Legacy alias — tests and docs refer to canonical first preference.
+PROVIDER_MODEL_MAP: dict[str, str] = {
+    pid: slugs[0] for pid, slugs in PROVIDER_SLUG_PREFERENCES.items()
+}
+
+EXCLUDED_SLUG_RE = (
+    r"(?:^|:)free\b|guard|embed|vision-instruct|codestral|devstral|"
+    r"ministral|lyria|nano\b|search-preview|build-"
+)
 
 # Alias slugs that map to canonical provider ids during deduplication
 PROVIDER_ALIASES: dict[str, str] = {
@@ -238,6 +277,57 @@ def finalize_live_fields(
         )
 
 
+def openrouter_display_name(model: dict[str, Any]) -> str | None:
+    """Strip vendor prefix from OpenRouter model name for UI display."""
+    raw = model.get("name")
+    if not isinstance(raw, str) or not raw.strip():
+        return None
+    if ": " in raw:
+        return raw.split(": ", 1)[1].strip()
+    return raw.strip()
+
+
+def resolve_model_slug(
+    provider: dict[str, Any],
+    models_by_id: dict[str, dict[str, Any]],
+) -> str | None:
+    """Pick OpenRouter slug: YAML override, then preference list, then auto-scan."""
+    pid = provider.get("id", "")
+    override = provider.get("openrouter_slug")
+    if isinstance(override, str) and override in models_by_id:
+        return override
+
+    for slug in PROVIDER_SLUG_PREFERENCES.get(pid, []):
+        if slug in models_by_id:
+            return slug
+
+    prefix = pid.split("_")[0] if "_" in pid else pid
+    alias_prefix = {
+        "google_gemini": "google",
+        "anthropic_claude": "anthropic",
+        "x_grok": "x-ai",
+        "meta_llama": "meta-llama",
+    }.get(pid, prefix.replace("_", "-"))
+
+    candidates: list[tuple[int, str]] = []
+    for slug, model in models_by_id.items():
+        if not slug.startswith(f"{alias_prefix}/"):
+            continue
+        if re.search(EXCLUDED_SLUG_RE, slug, re.IGNORECASE):
+            continue
+        ctx = model.get("context_length") or 0
+        try:
+            ctx_val = int(ctx)
+        except (TypeError, ValueError):
+            ctx_val = 0
+        candidates.append((ctx_val, slug))
+
+    if not candidates:
+        return None
+    candidates.sort(reverse=True)
+    return candidates[0][1]
+
+
 def merge_openrouter_fields(
     provider: dict[str, Any],
     model: dict[str, Any],
@@ -277,6 +367,17 @@ def merge_openrouter_fields(
                 fetched_at=fetched_at,
                 model_slug=model_slug,
             )
+
+    display = openrouter_display_name(model)
+    if display:
+        provider["flagship_model"] = display
+        field_sources["flagship_model"] = source_entry(
+            display,
+            source="openrouter",
+            source_quality="aggregator",
+            fetched_at=fetched_at,
+            model_slug=model_slug,
+        )
 
 
 def merge_litellm_fields(
@@ -452,7 +553,7 @@ def main() -> int:
     if live_ok:
         for provider in providers:
             pid = provider.get("id", "")
-            slug = PROVIDER_MODEL_MAP.get(pid)
+            slug = resolve_model_slug(provider, models_by_id)
             if slug and models_by_id:
                 model = models_by_id.get(slug)
                 if model:
@@ -462,6 +563,8 @@ def main() -> int:
                     models_matched += 1
                 else:
                     models_missing.append(slug)
+            elif PROVIDER_SLUG_PREFERENCES.get(pid):
+                models_missing.append(PROVIDER_SLUG_PREFERENCES[pid][0])
             if slug and litellm:
                 merge_litellm_fields(
                     provider, litellm, model_slug=slug, fetched_at=fetched_at
@@ -469,7 +572,7 @@ def main() -> int:
             merge_embedding_dimensions(provider, fetched_at=fetched_at, hf_dims=hf_dims)
             finalize_live_fields(
                 provider,
-                model_slug=PROVIDER_MODEL_MAP.get(pid),
+                model_slug=slug or PROVIDER_SLUG_PREFERENCES.get(pid, [None])[0],
                 fetched_at=fetched_at,
             )
 

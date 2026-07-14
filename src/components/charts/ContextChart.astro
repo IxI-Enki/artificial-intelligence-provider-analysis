@@ -20,19 +20,26 @@ const sorted = [...providers].sort(
   (a, b) => (b.context_tokens ?? 0) - (a.context_tokens ?? 0),
 );
 
-function barLabel(p: Provider): string {
-  const slug = p.field_sources?.context_tokens?.model_slug;
-  return slug ? `${p.name}\n${slug}` : p.name;
+function modelSlug(p: Provider): string | undefined {
+  return p.field_sources?.context_tokens?.model_slug;
 }
 
-const labels = JSON.stringify(sorted.map(barLabel));
+const labels = JSON.stringify(sorted.map((p) => p.name));
+const slugs = JSON.stringify(sorted.map((p) => modelSlug(p) ?? ''));
 const values = JSON.stringify(sorted.map((p) => p.context_tokens ?? null));
+const barCount = sorted.length;
+const chartHeight = Math.max(320, barCount * 44 + 48);
 ---
 
 <div class="chart-card">
-  <p class="chart-subtitle">Aggregator pricing via OpenRouter</p>
-  <div class="chart-wrap chart-wrap--tall">
-    <canvas id={chartId} data-labels={labels} data-values={values}></canvas>
+  <p class="chart-subtitle">Context window via OpenRouter (log scale)</p>
+  <div class="chart-wrap chart-wrap--tall" style={`height:${chartHeight}px`}>
+    <canvas
+      id={chartId}
+      data-labels={labels}
+      data-slugs={slugs}
+      data-values={values}
+    ></canvas>
   </div>
 </div>
 <script is:inline src={base + 'vendor/chart.umd.min.js'}></script>
@@ -41,7 +48,12 @@ const values = JSON.stringify(sorted.map((p) => p.context_tokens ?? null));
     const canvas = document.getElementById(chartId);
     if (!canvas || typeof Chart === 'undefined') return;
     const labels = JSON.parse(canvas.dataset.labels || '[]');
+    const slugs = JSON.parse(canvas.dataset.slugs || '[]');
     const values = JSON.parse(canvas.dataset.values || '[]');
+
+    const fmtCtx = (v) =>
+      v == null || Number.isNaN(v) ? 'n/a' : Number(v).toLocaleString('en-US');
+
     new Chart(canvas.getContext('2d'), {
       type: 'bar',
       data: {
@@ -52,18 +64,36 @@ const values = JSON.stringify(sorted.map((p) => p.context_tokens ?? null));
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
+        layout: { padding: { right: 12 } },
         scales: {
-          x: { type: 'logarithmic' },
+          x: {
+            type: 'logarithmic',
+            title: { display: true, text: 'Tokens' },
+            ticks: {
+              callback: (v) => fmtCtx(v),
+              maxTicksLimit: 8,
+            },
+          },
           y: {
             ticks: {
-              font: (ctx) => {
-                const label = labels[ctx.index] ?? '';
-                return { size: String(label).includes('\n') ? 10 : 11 };
-              },
+              autoSkip: false,
+              font: { size: 12 },
             },
           },
         },
-        plugins: { legend: { display: false } },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: (items) => {
+                const i = items[0]?.dataIndex ?? 0;
+                const slug = slugs[i];
+                return slug ? labels[i] + ' · ' + slug : labels[i];
+              },
+              label: (ctx) => 'Context: ' + fmtCtx(ctx.parsed.x) + ' tokens',
+            },
+          },
+        },
       },
     });
   });

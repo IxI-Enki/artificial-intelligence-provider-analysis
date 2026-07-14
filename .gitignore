@@ -1,17 +1,80 @@
+# =============================================================================
+# AI Provider Landscape — .gitignore
+# =============================================================================
+
+# --- Local knowledge graph (graphify) ---
 graphify-out/
 
+# --- Python ---
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
 .pytest_cache/
-
-.env
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+pip-wheel-metadata/
+*.egg-info/
+.eggs/
+build/
 venv/
 .venv/
+env/
+.env
+.env.*
+!.env.example
 
-.DS_Store
-Thumbs.db
+# --- Python test & coverage artifacts (test sources in tests/ stay tracked) ---
+.coverage
+.coverage.*
+htmlcov/
+coverage/
+coverage.xml
+*.cover
+.nox/
+.tox/
 
+# --- Node / Astro ---
 node_modules/
 dist/
 .astro/
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+
+# --- Vitest / frontend test artifacts ---
+test-results/
+playwright-report/
+blob-report/
+vitest.config.ts.timestamp-*
+
+# --- Generated at build (Pagefind search index) ---
 public/pagefind/
+
+# --- Logs & temp ---
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# --- Editors (keep shared workspace hints if added later) ---
+.idea/
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

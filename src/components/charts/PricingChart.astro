@@ -4,7 +4,8 @@ interface FieldSource {
 }
 
 interface Provider {
-  flagship_model?: string;
+  name: string;
+  context_tokens?: number | null;
   api_input_per_million?: number | null;
   api_output_per_million?: number | null;
   field_sources?: Record<string, FieldSource>;
@@ -18,6 +19,10 @@ interface Props {
 const { providers, chartId = 'price-chart' } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
+const sorted = [...providers].sort(
+  (a, b) => (b.context_tokens ?? 0) - (a.context_tokens ?? 0),
+);
+
 function modelSlug(p: Provider): string | undefined {
   return (
     p.field_sources?.api_input_per_million?.model_slug ??
@@ -25,23 +30,21 @@ function modelSlug(p: Provider): string | undefined {
   );
 }
 
-function barLabel(p: Provider): string {
-  const display = p.flagship_model ?? 'n/a';
-  const slug = modelSlug(p);
-  return slug ? `${display}\n${slug}` : display;
-}
-
-const labels = JSON.stringify(providers.map(barLabel));
-const inputData = JSON.stringify(providers.map((p) => p.api_input_per_million ?? null));
-const outputData = JSON.stringify(providers.map((p) => p.api_output_per_million ?? null));
+const labels = JSON.stringify(sorted.map((p) => p.name));
+const slugs = JSON.stringify(sorted.map((p) => modelSlug(p) ?? ''));
+const inputData = JSON.stringify(sorted.map((p) => p.api_input_per_million ?? null));
+const outputData = JSON.stringify(sorted.map((p) => p.api_output_per_million ?? null));
+const barCount = sorted.length;
+const chartHeight = Math.max(320, barCount * 52 + 48);
 ---
 
 <div class="chart-card">
-  <p class="chart-subtitle">Aggregator pricing via OpenRouter</p>
-  <div class="chart-wrap">
+  <p class="chart-subtitle">Input and output USD per 1M tokens via OpenRouter</p>
+  <div class="chart-wrap chart-wrap--pricing" style={`height:${chartHeight}px`}>
     <canvas
       id={chartId}
       data-labels={labels}
+      data-slugs={slugs}
       data-input={inputData}
       data-output={outputData}
     ></canvas>
@@ -53,8 +56,13 @@ const outputData = JSON.stringify(providers.map((p) => p.api_output_per_million 
     const canvas = document.getElementById(chartId);
     if (!canvas || typeof Chart === 'undefined') return;
     const labels = JSON.parse(canvas.dataset.labels || '[]');
+    const slugs = JSON.parse(canvas.dataset.slugs || '[]');
     const inputData = JSON.parse(canvas.dataset.input || '[]');
     const outputData = JSON.parse(canvas.dataset.output || '[]');
+
+    const fmtUsd = (v) =>
+      v == null || Number.isNaN(v) ? 'n/a' : '$' + Number(v).toFixed(2);
+
     new Chart(canvas.getContext('2d'), {
       type: 'bar',
       data: {
@@ -65,20 +73,38 @@ const outputData = JSON.stringify(providers.map((p) => p.api_output_per_million 
         ],
       },
       options: {
+        indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
+        layout: { padding: { right: 12 } },
         scales: {
           x: {
+            beginAtZero: true,
+            title: { display: true, text: 'USD / 1M tokens' },
             ticks: {
-              font: (ctx) => {
-                const label = labels[ctx.index] ?? '';
-                return { size: String(label).includes('\n') ? 10 : 11 };
-              },
-              maxRotation: 0,
-              autoSkip: false,
+              callback: (v) => '$' + v,
+              maxTicksLimit: 8,
             },
           },
-          y: { beginAtZero: true },
+          y: {
+            ticks: {
+              autoSkip: false,
+              font: { size: 12 },
+            },
+          },
+        },
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              title: (items) => {
+                const i = items[0]?.dataIndex ?? 0;
+                const slug = slugs[i];
+                return slug ? labels[i] + ' · ' + slug : labels[i];
+              },
+              label: (ctx) => ctx.dataset.label + ': ' + fmtUsd(ctx.parsed.x),
+            },
+          },
         },
       },
     });

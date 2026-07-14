@@ -72,14 +72,16 @@ Astro reads `src/lib/data/*.json` copied from `data/` at `npm run prebuild`. The
 
 ## Provider → OpenRouter slug map
 
-| Provider id | Flagship (YAML) | OpenRouter slug |
-|-------------|-----------------|-----------------|
+| Provider id | Flagship (YAML) | OpenRouter slug (preference) |
+|-------------|-----------------|------------------------------|
 | `google_gemini` | Gemini 2.5 Pro | `google/gemini-2.5-pro` |
-| `anthropic_claude` | Claude Opus 4 | `anthropic/claude-opus-4.6` |
+| `anthropic_claude` | Claude Opus 4.6 | `anthropic/claude-opus-4.6` |
 | `openai` | GPT-4.1 | `openai/gpt-4.1` |
-| `x_grok` | Grok 3 | `x-ai/grok-4.20` |
-| `mistral` | Mistral Medium 3 | `mistralai/mistral-medium-3` |
+| `x_grok` | Grok 4.20 | `x-ai/grok-4.20` |
+| `mistral` | Mistral Large 3 2512 | `mistralai/mistral-large-2512` |
 | `meta_llama` | Llama 4 Maverick | `meta-llama/llama-4-maverick` |
 | `perplexity` | Sonar Pro | `perplexity/sonar-pro` |
+
+`fetch_providers.py` tries each slug in order; if none match, auto-picks the largest-context chat model for that vendor (excluding free/mini/guard variants). `flagship_model` display name syncs from OpenRouter on each fetch.
 
 OpenRouter and LiteLLM aggregate reseller pricing; numbers may differ slightly from direct vendor list prices.

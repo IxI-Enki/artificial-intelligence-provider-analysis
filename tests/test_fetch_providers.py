@@ -119,9 +119,10 @@ def test_litellm_and_hf_merge_field_sources():
 
 def test_openrouter_miss_marks_missing_not_yaml_fallback(tmp_data):
     fake_or = {
-        "google/gemini-3.1-pro-preview": {
+        "google/gemini-2.5-pro": {
             "context_length": 1048576,
-            "pricing": {"prompt": "0.000002", "completion": "0.000012"},
+            "name": "Google: Gemini 2.5 Pro",
+            "pricing": {"prompt": "0.00000125", "completion": "0.00001"},
         },
     }
 
@@ -133,13 +134,33 @@ def test_openrouter_miss_marks_missing_not_yaml_fallback(tmp_data):
     payload = json.loads((tmp_data / "data" / "providers.json").read_text(encoding="utf-8"))
     google = next(p for p in payload["providers"] if p["id"] == "google_gemini")
     assert google["context_tokens"] == 1048576
+    assert google["flagship_model"] == "Gemini 2.5 Pro"
 
     claude = next(p for p in payload["providers"] if p["id"] == "anthropic_claude")
     assert claude["context_tokens"] is None
     assert claude["api_input_per_million"] is None
     fs = claude["field_sources"]["context_tokens"]
     assert fs["source_quality"] == "missing"
-    assert fs["model_slug"] == "anthropic/claude-opus-4.8"
+    assert fs["model_slug"] == "anthropic/claude-opus-4.6"
+
+
+def test_resolve_model_slug_prefers_yaml_override():
+    provider = {"id": "openai", "openrouter_slug": "openai/gpt-4o"}
+    models = {
+        "openai/gpt-4.1": {"context_length": 1000},
+        "openai/gpt-4o": {"context_length": 2000},
+    }
+    assert fp.resolve_model_slug(provider, models) == "openai/gpt-4o"
+
+
+def test_resolve_model_slug_falls_back_to_preference_list():
+    provider = {"id": "openai"}
+    models = {"openai/gpt-4.1": {"context_length": 1000, "name": "OpenAI: GPT-4.1"}}
+    assert fp.resolve_model_slug(provider, models) == "openai/gpt-4.1"
+
+
+def test_openrouter_display_name_strips_vendor_prefix():
+    assert fp.openrouter_display_name({"name": "Anthropic: Claude Opus 4.6"}) == "Claude Opus 4.6"
 
 
 def test_commercial_embedding_dims_inferred_quality():
