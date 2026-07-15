@@ -22,7 +22,9 @@ jobs:
         run: pip install -r scripts/requirements.txt
 
       - name: Build provider JSON
-        run: python scripts/fetch_providers.py
+        run: |
+          python scripts/fetch_providers.py
+          python scripts/fetch_models.py
 
       - name: Validate JSON
         run: python scripts/validate_json.py

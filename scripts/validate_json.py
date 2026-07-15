@@ -8,19 +8,33 @@ from pathlib import Path
 import jsonschema
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "data" / "schemas" / "providers.schema.json"
+PROVIDERS_SCHEMA = ROOT / "data" / "schemas" / "providers.schema.json"
+MODELS_SCHEMA = ROOT / "data" / "schemas" / "models.schema.json"
+
+
+def validate_file(path: Path, schema_path: Path, label: str) -> None:
+    if not path.exists():
+        raise FileNotFoundError(f"Missing {path}")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    jsonschema.validate(data, schema)
+    print(f"[OK] {label} valid")
 
 
 def main() -> int:
-    path = ROOT / "data" / "providers.json"
     manifest = ROOT / "data" / "manifest.json"
-    if not path.exists() or not manifest.exists():
-        print("[ERROR] Missing data files", file=sys.stderr)
+    if not manifest.exists():
+        print("[ERROR] Missing manifest.json", file=sys.stderr)
         return 1
-    data = json.loads(path.read_text(encoding="utf-8"))
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    jsonschema.validate(data, schema)
-    print("[OK] providers.json valid")
+    try:
+        validate_file(ROOT / "data" / "providers.json", PROVIDERS_SCHEMA, "providers.json")
+        validate_file(ROOT / "data" / "models.json", MODELS_SCHEMA, "models.json")
+    except FileNotFoundError as exc:
+        print(f"[ERROR] {exc}", file=sys.stderr)
+        return 1
+    except jsonschema.ValidationError as exc:
+        print(f"[ERROR] Schema validation failed: {exc.message}", file=sys.stderr)
+        return 1
     print("[OK] manifest.json present")
     return 0
 

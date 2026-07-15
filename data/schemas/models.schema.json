@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "source",
+    "model_count",
+    "vendor_count",
+    "vendors",
+    "models"
+  ],
+  "properties": {
+    "schema_version": { "type": ["string", "integer"] },
+    "generated_at": { "type": "string" },
+    "source": { "const": "openrouter" },
+    "model_count": { "type": "integer", "minimum": 0 },
+    "vendor_count": { "type": "integer", "minimum": 0 },
+    "vendors": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "vendor", "name", "weight_access"],
+        "properties": {
+          "id": { "type": "string" },
+          "vendor": { "type": "string" },
+          "name": { "type": "string" },
+          "display_name": { "type": "string" },
+          "context_tokens": { "type": ["integer", "null"] },
+          "max_output_tokens": { "type": ["integer", "null"] },
+          "api_input_per_million": { "type": ["number", "null"] },
+          "api_output_per_million": { "type": ["number", "null"] },
+          "api_cache_read_per_million": { "type": ["number", "null"] },
+          "modality": { "type": ["string", "null"] },
+          "weight_access": {
+            "type": "string",
+            "enum": ["open", "closed", "unknown"]
+          },
+          "hugging_face_id": { "type": ["string", "null"] },
+          "supports_tools": { "type": "boolean" },
+          "supports_structured_outputs": { "type": "boolean" },
+          "knowledge_cutoff": { "type": ["string", "null"] },
+          "description": { "type": ["string", "null"] },
+          "created_at": { "type": ["integer", "null"] },
+          "is_free": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

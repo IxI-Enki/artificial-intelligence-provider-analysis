@@ -33,6 +33,7 @@ jobs:
         run: |
           pip install -r scripts/requirements.txt
           python scripts/fetch_providers.py
+          python scripts/fetch_models.py
           python scripts/validate_json.py
           python scripts/check_data_quality.py
 

@@ -39,6 +39,7 @@ Astro 5 static site + Svelte islands + Pagefind search. Data is baked at build t
 |------|-------------|
 | `data/providers.yaml` | Curated source (edit manually) |
 | `data/providers.json` | Generated for the UI |
+| `data/models.json` | Full OpenRouter model catalog |
 | `data/manifest.json` | `generated_at`, `stale_warning`, changelog |
 
 Merged **daily** (02:00 UTC) via GitHub Actions.
@@ -48,6 +49,7 @@ Merged **daily** (02:00 UTC) via GitHub Actions.
 ```powershell
 pip install -r scripts/requirements.txt
 python scripts/fetch_providers.py
+python scripts/fetch_models.py
 python scripts/validate_json.py
 python scripts/check_data_quality.py
 pytest tests/test_fetch_providers.py

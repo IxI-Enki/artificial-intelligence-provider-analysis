@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ModelCatalog from '../islands/ModelCatalog.svelte';
+import modelsData from '../lib/data/models.json';
+import manifestData from '../lib/data/manifest.json';
+
+const catalog = modelsData;
+const manifest = manifestData;
+const base = import.meta.env.BASE_URL;
+---
+
+<Layout
+  title="OpenRouter model catalog"
+  generatedAt={catalog.generated_at}
+  staleWarning={manifest.stale_warning}
+  activeNav="models"
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker">OpenRouter catalog · all vendors</p>
+      <h1>Model catalog</h1>
+      <p class="lead">
+        Full daily snapshot from
+        <a href="https://openrouter.ai/api/v1/models">OpenRouter</a>:
+        {catalog.model_count} models across {catalog.vendor_count} vendors — context, API pricing,
+        tools, modality, and open/closed weights (HF link when available).
+      </p>
+      <p class="lead" style="margin-top:8px">
+        <a href={base}>Back to curated provider landscape</a>
+        (7 flagship providers with MCP / GDPR notes).
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <ModelCatalog
+        client:load
+        models={catalog.models}
+        vendors={catalog.vendors}
+        generatedAt={catalog.generated_at}
+      />
+    </div>
+  </section>
+</Layout>

@@ -13,6 +13,11 @@
       },
       "huggingface": {
         "ok": false
+      },
+      "openrouter_catalog": {
+        "ok": true,
+        "model_count": 343,
+        "vendor_count": 55
       }
     },
     "ok": true,
@@ -22,7 +27,8 @@
     "errors": []
   },
   "files": [
-    "providers.json"
+    "providers.json",
+    "models.json"
   ],
   "changelog": [
     {
@@ -42,5 +48,12 @@
       "note": "Merged providers.yaml + live sources (7 OpenRouter models)"
     }
   ],
-  "stale_warning": "Optional enrichments partial: HF Hub meta-llama/Llama-3.1-8B: HTTP Error 401: Unauthorized"
+  "stale_warning": "Optional enrichments partial: HF Hub meta-llama/Llama-3.1-8B: HTTP Error 401: Unauthorized",
+  "catalog": {
+    "source": "openrouter",
+    "generated_at": "2026-07-15T00:02:13.929742+00:00",
+    "model_count": 343,
+    "vendor_count": 55,
+    "ok": true
+  }
 }
