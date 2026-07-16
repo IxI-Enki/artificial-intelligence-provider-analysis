@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-15T04:39:31.327921+00:00",
+  "generated_at": "2026-07-16T04:50:05.685904+00:00",
   "verified_at": "2026-06-28",
   "mcp_last_reviewed": "2026-02-15",
   "source": "curated_yaml+live_merge",
@@ -52,28 +52,28 @@
           "value": 1048576,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "google/gemini-3.1-pro-preview"
         },
         "api_input_per_million": {
           "value": 2.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "google/gemini-3.1-pro-preview"
         },
         "api_output_per_million": {
           "value": 12.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "google/gemini-3.1-pro-preview"
         },
         "flagship_model": {
           "value": "Gemini 3.1 Pro Preview",
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "google/gemini-3.1-pro-preview"
         }
       },
@@ -113,28 +113,28 @@
           "value": 1000000,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "anthropic/claude-sonnet-5"
         },
         "api_input_per_million": {
           "value": 2.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "anthropic/claude-sonnet-5"
         },
         "api_output_per_million": {
           "value": 10.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "anthropic/claude-sonnet-5"
         },
         "flagship_model": {
           "value": "Claude Sonnet 5",
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "anthropic/claude-sonnet-5"
         }
       },
@@ -175,35 +175,35 @@
           "value": 1050000,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "openai/gpt-5.6-sol-pro"
         },
         "api_input_per_million": {
           "value": 5.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "openai/gpt-5.6-sol-pro"
         },
         "api_output_per_million": {
           "value": 30.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "openai/gpt-5.6-sol-pro"
         },
         "flagship_model": {
           "value": "GPT-5.6 Sol Pro",
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "openai/gpt-5.6-sol-pro"
         },
         "embedding_dimensions": {
           "value": 3072,
           "source": "static_map",
           "source_quality": "inferred",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "text-embedding-3-large"
         }
       },
@@ -243,28 +243,28 @@
           "value": 500000,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "x-ai/grok-4.5"
         },
         "api_input_per_million": {
           "value": 2.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "x-ai/grok-4.5"
         },
         "api_output_per_million": {
           "value": 6.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "x-ai/grok-4.5"
         },
         "flagship_model": {
           "value": "Grok 4.5",
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "x-ai/grok-4.5"
         }
       },
@@ -307,35 +307,35 @@
           "value": 262144,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "mistralai/mistral-medium-3-5"
         },
         "api_input_per_million": {
           "value": 1.5,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "mistralai/mistral-medium-3-5"
         },
         "api_output_per_million": {
           "value": 7.5,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "mistralai/mistral-medium-3-5"
         },
         "flagship_model": {
           "value": "Mistral Medium 3.5",
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "mistralai/mistral-medium-3-5"
         },
         "embedding_dimensions": {
           "value": 4096,
           "source": "huggingface",
           "source_quality": "primary",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00"
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00"
         }
       },
       "context_tokens": 262144,
@@ -379,28 +379,28 @@
           "value": 1048576,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "meta-llama/llama-4-maverick"
         },
         "api_input_per_million": {
           "value": 0.2,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "meta-llama/llama-4-maverick"
         },
         "api_output_per_million": {
           "value": 0.8,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "meta-llama/llama-4-maverick"
         },
         "flagship_model": {
           "value": "Llama 4 Maverick",
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "meta-llama/llama-4-maverick"
         }
       },
@@ -439,28 +439,28 @@
           "value": 200000,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "perplexity/sonar-pro-search"
         },
         "api_input_per_million": {
           "value": 3.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "perplexity/sonar-pro-search"
         },
         "api_output_per_million": {
           "value": 15.0,
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "perplexity/sonar-pro-search"
         },
         "flagship_model": {
           "value": "Sonar Pro Search",
           "source": "openrouter",
           "source_quality": "aggregator",
-          "fetched_at": "2026-07-15T04:39:31.327921+00:00",
+          "fetched_at": "2026-07-16T04:50:05.685904+00:00",
           "model_slug": "perplexity/sonar-pro-search"
         }
       },
