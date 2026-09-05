@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-04T06:41:20.485655+00:00",
+  "generated_at": "2026-09-05T06:28:10.393304+00:00",
   "source": "curated_yaml+live_merge",
   "live_fetch": {
     "sources": {
@@ -16,12 +16,12 @@
       },
       "openrouter_catalog": {
         "ok": true,
-        "model_count": 427,
+        "model_count": 431,
         "vendor_count": 58
       }
     },
     "ok": true,
-    "fetched_at": "2026-09-04T06:41:20.485655+00:00",
+    "fetched_at": "2026-09-05T06:28:10.393304+00:00",
     "models_matched": 7,
     "models_missing": [],
     "errors": []
@@ -31,6 +31,10 @@
     "models.json"
   ],
   "changelog": [
+    {
+      "at": "2026-09-05T06:28:10.393304+00:00",
+      "note": "Merged providers.yaml + live sources (7 OpenRouter models)"
+    },
     {
       "at": "2026-09-04T06:41:20.485655+00:00",
       "note": "Merged providers.yaml + live sources (7 OpenRouter models)"
@@ -46,17 +50,13 @@
     {
       "at": "2026-09-01T06:56:16.947231+00:00",
       "note": "Merged providers.yaml + live sources (7 OpenRouter models)"
-    },
-    {
-      "at": "2026-08-31T07:50:41.446575+00:00",
-      "note": "Merged providers.yaml + live sources (7 OpenRouter models)"
     }
   ],
   "stale_warning": "Optional enrichments partial: HF Hub meta-llama/Llama-3.1-8B: HTTP Error 401: Unauthorized",
   "catalog": {
     "source": "openrouter",
-    "generated_at": "2026-09-04T06:41:20.869278+00:00",
-    "model_count": 427,
+    "generated_at": "2026-09-05T06:28:10.768362+00:00",
+    "model_count": 431,
     "vendor_count": 58,
     "ok": true
   }
